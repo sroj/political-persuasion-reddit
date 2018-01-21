@@ -5,7 +5,8 @@ import json
 
 indir = '/u/cs401/A1/data/';
 
-def preproc1( comment , steps=range(1,11)):
+
+def preproc1(comment, steps=range(1, 11)):
     ''' This function pre-processes a single comment
 
     Parameters:                                                                      
@@ -37,11 +38,11 @@ def preproc1( comment , steps=range(1,11)):
         print('TODO')
     if 10 in steps:
         print('TODO')
-        
+
     return modComm
 
-def main( args ):
 
+def main(args):
     allOutput = []
     for subdir, dirs, files in os.walk(indir):
         for file in files:
@@ -57,10 +58,11 @@ def main( args ):
             # TODO: process the body field (j['body']) with preproc1(...) using default for `steps` argument
             # TODO: replace the 'body' field with the processed text
             # TODO: append the result to 'allOutput'
-            
+
     fout = open(args.output, 'w')
     fout.write(json.dumps(allOutput))
     fout.close()
+
 
 if __name__ == "__main__":
 
@@ -74,5 +76,5 @@ if __name__ == "__main__":
     if (args.max > 200272):
         print("Error: If you want to read more than 200,272 comments per file, you have to read them all.")
         sys.exit(1)
-        
+
     main(args)
