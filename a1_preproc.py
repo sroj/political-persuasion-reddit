@@ -73,7 +73,7 @@ if __name__ == "__main__":
     parser.add_argument("--max", help="The maximum number of comments to read from each file", default=10000)
     args = parser.parse_args()
 
-    if (args.max > 200272):
+    if args.max > 200272:
         print("Error: If you want to read more than 200,272 comments per file, you have to read them all.")
         sys.exit(1)
 
