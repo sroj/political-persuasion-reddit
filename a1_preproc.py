@@ -33,6 +33,10 @@ def remove_html_char_codes(modComm):
     return html.unescape(modComm)
 
 
+def split_punctuation(modComm):
+    return
+
+
 def preproc1(comment, steps=range(1, 11)):
     ''' This function pre-processes a single comment
 
@@ -55,7 +59,7 @@ def preproc1(comment, steps=range(1, 11)):
         print('Removing urls')
         modComm = remove_urls(modComm)
     if 4 in steps:
-        print('TODO')
+        modComm = split_punctuation(modComm)
     if 5 in steps:
         print('TODO')
     if 6 in steps:
