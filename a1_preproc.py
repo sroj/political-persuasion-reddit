@@ -67,7 +67,7 @@ def preproc1(comment, steps=range(1, 11)):
     if 9 in steps:
         print('TODO')
     if 10 in steps:
-        print('TODO')
+        modComm = modComm.lower()
 
     return modComm
 
