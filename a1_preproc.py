@@ -3,7 +3,6 @@ import html
 import json
 import os
 import re
-import string
 import sys
 
 # TODO Restore this!
@@ -52,19 +51,29 @@ def read_abbreviations():
 
 def split_punctuation(modComm):
     abbreviations = read_abbreviations()
-    punctuation = r'[!"#$%&()*+,-./:;<=>?@\[\\\]^_{|}~]+'
 
-    pattern = punctuation
+    abbreviations_regex = "(" + "|".join(abbreviations).replace(".", "\.") + ")"
 
-    comment_splitted = re.sub(
-        r'([!"#$%&()*+,-./:;<=>?@\[\\\]^_{|}~]+)',
-        repl=r' \1 ',
-        string=modComm
-    )
+    pattern = abbreviations_regex + "|" + r'([!"#$%&()*+,-./:;<=>?@\[\\\]^_{|}~]+)'
 
-    comment_splitted = re.sub(r' {2,}', repl=' ', string=comment_splitted)
+    result = re.sub(pattern=pattern, repl=repl_punctuation, string=modComm)
 
-    return comment_splitted
+    # Remove repeated spaces
+    result = re.sub(r' {2,}', repl=' ', string=result)
+
+    return result
+
+
+def repl_punctuation(matchobj):
+    start = matchobj.start()
+    end = matchobj.end()
+    print("Start, end: {}, {}".format(start, end))
+    match = matchobj.group(0)
+
+    if match is not None:
+        return " " + match + " "
+
+    return match
 
 
 def preproc1(comment, steps=range(1, 11)):
