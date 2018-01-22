@@ -54,6 +54,7 @@ def split_punctuation(modComm):
 
     abbreviations_regex = "(" + "|".join(abbreviations).replace(".", "\.") + ")"
 
+    # TODO Maybe improve handling of cases like: ?:# i.e. multiple punctuation concatenated together
     pattern = abbreviations_regex + "|" + r'([!"#$%&()*+,-./:;<=>?@\[\\\]^_{|}~]+)'
 
     result = re.sub(pattern=pattern, repl=repl_punctuation, string=modComm)
@@ -74,6 +75,19 @@ def repl_punctuation(matchobj):
         return " " + match + " "
 
     return match
+
+
+def split_clitics(modComm):
+    # Handle can't
+    modComm = re.sub(r"(\b)can't(\b)", repl=r"\1ca n't\2", string=modComm)
+
+    # Handle possessives and has/is
+    modComm = re.sub(r"(\w+)'s", repl=r"\1 's", string=modComm)
+
+    # Handle plural possessives
+    modComm = re.sub(r"(\w+)s'", repl=r"\1s '", string=modComm)
+
+    return modComm
 
 
 def preproc1(comment, steps=range(1, 11)):
@@ -101,7 +115,8 @@ def preproc1(comment, steps=range(1, 11)):
         print('Splitting punctuation')
         modComm = split_punctuation(modComm)
     if 5 in steps:
-        print('TODO')
+        print('Splitting clitics')
+        modComm = split_clitics(modComm)
     if 6 in steps:
         print('TODO')
     if 7 in steps:
