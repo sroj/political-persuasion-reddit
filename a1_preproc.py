@@ -1,12 +1,10 @@
-import sys
 import argparse
-import os
-import json
-import re
 import html
-
-
-
+import json
+import os
+import re
+import string
+import sys
 
 # TODO Restore this!
 # TODO Restore this!
@@ -24,7 +22,7 @@ indir = prefix_a1 + 'data/';
 
 # prefix_wordlist = '/u/cs401/'
 prefix_wordlist = ''
-wordlists_dir = prefix_wordlist + 'Wordlists'
+wordlists_dir = prefix_wordlist + 'Wordlists/'
 
 
 def remove_newlines(text):
@@ -32,15 +30,41 @@ def remove_newlines(text):
 
 
 def remove_urls(text):
-    return re.sub(pattern='https?://[\w./\-:]+|www\.[\w./\-:]+', repl='', string=text)
+    return re.sub('https?://[\w./\-:]+|www\.[\w./\-:]+', repl='', string=text)
 
 
 def remove_html_char_codes(modComm):
     return html.unescape(modComm)
 
 
+def read_abbreviations():
+    abbreviation_files = ["abbrev.english", "pn_abbrev.english"]
+
+    abbreviations = set()
+
+    for abb_file in abbreviation_files:
+        with open(wordlists_dir + abb_file) as f:
+            for line in f:
+                abbreviations.add(line.strip())
+
+    return abbreviations
+
+
 def split_punctuation(modComm):
-    return
+    abbreviations = read_abbreviations()
+    punctuation = r'[!"#$%&()*+,-./:;<=>?@\[\\\]^_{|}~]+'
+
+    pattern = punctuation
+
+    comment_splitted = re.sub(
+        r'([!"#$%&()*+,-./:;<=>?@\[\\\]^_{|}~]+)',
+        repl=r' \1 ',
+        string=modComm
+    )
+
+    comment_splitted = re.sub(r' {2,}', repl=' ', string=comment_splitted)
+
+    return comment_splitted
 
 
 def preproc1(comment, steps=range(1, 11)):
@@ -65,6 +89,7 @@ def preproc1(comment, steps=range(1, 11)):
         print('Removing urls')
         modComm = remove_urls(modComm)
     if 4 in steps:
+        print('Splitting punctuation')
         modComm = split_punctuation(modComm)
     if 5 in steps:
         print('TODO')
