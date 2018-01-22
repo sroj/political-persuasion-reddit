@@ -54,8 +54,14 @@ def split_punctuation(modComm):
 
     abbreviations_regex = "(" + "|".join(abbreviations).replace(".", "\.") + ")"
 
+    number_with_separator_regex = r"\d{1,3}(,\d{3})+(\.\d+)?"
+    number_without_separator_regex = r"\b\d+\b"
+
     # TODO Maybe improve handling of cases like: ?:# i.e. multiple punctuation concatenated together
-    pattern = abbreviations_regex + "|" + r'([!"#$%&()*+,-./:;<=>?@\[\\\]^_{|}~]+)'
+    pattern = abbreviations_regex + "|" \
+              + number_with_separator_regex + "|" \
+              + number_without_separator_regex + "|" \
+              + r'([!"#$%&()*+,-./:;<=>?@\[\\\]^_{|}~]+)'
 
     result = re.sub(pattern=pattern, repl=repl_punctuation, string=modComm)
 
