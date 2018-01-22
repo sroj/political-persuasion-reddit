@@ -2,6 +2,8 @@ import sys
 import argparse
 import os
 import json
+import re
+import html
 
 indir = 'data'
 
@@ -19,6 +21,18 @@ indir = 'data'
 # indir = '/u/cs401/A1/data/';
 
 
+def remove_newlines(text):
+    return text.replace("\n", " ").replace("\r", " ")
+
+
+def remove_urls(text):
+    return re.sub(pattern='https?://[\w./\-:]+|www\.[\w./\-:]+', repl='', string=text)
+
+
+def remove_html_char_codes(modComm):
+    return html.unescape(modComm)
+
+
 def preproc1(comment, steps=range(1, 11)):
     ''' This function pre-processes a single comment
 
@@ -30,13 +44,16 @@ def preproc1(comment, steps=range(1, 11)):
         modComm : string, the modified comment 
     '''
 
-    modComm = ''
+    modComm = comment
     if 1 in steps:
-        print('TODO')
+        print('Removing newline characters')
+        modComm = remove_newlines(modComm)
     if 2 in steps:
-        print('TODO')
+        print("Replacing HTML character codes")
+        modComm = remove_html_char_codes(modComm)
     if 3 in steps:
-        print('TODO')
+        print('Removing urls')
+        modComm = remove_urls(modComm)
     if 4 in steps:
         print('TODO')
     if 5 in steps:
