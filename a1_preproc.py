@@ -5,9 +5,9 @@ import json
 import re
 import html
 
-indir = 'data'
 
 
+
 # TODO Restore this!
 # TODO Restore this!
 # TODO Restore this!
@@ -18,7 +18,13 @@ indir = 'data'
 # TODO Restore this!
 # TODO Restore this!
 # TODO Restore this!
-# indir = '/u/cs401/A1/data/';
+# prefix_a1 = '/u/cs401/A1/'
+prefix_a1 = ''
+indir = prefix_a1 + 'data/';
+
+# prefix_wordlist = '/u/cs401/'
+prefix_wordlist = ''
+wordlists_dir = prefix_wordlist + 'Wordlists'
 
 
 def remove_newlines(text):
