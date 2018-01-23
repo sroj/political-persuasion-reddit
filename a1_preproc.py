@@ -84,14 +84,32 @@ def repl_punctuation(matchobj):
 
 
 def split_clitics(modComm):
-    # Handle can't
-    modComm = re.sub(r"(\b)can't(\b)", repl=r"\1ca n't\2", string=modComm)
+
+    verb_tokens = "(ca|had|ai|am|are|could|dare|did|does|do|has|have|is|need|must|ought|should|was|were|wo|would)"
+
+    # Handle "verb + not"
+    modComm = re.sub(r"\b" + verb_tokens + r"n't\b", repl=r"\1 n't", string=modComm, flags=re.IGNORECASE)
 
     # Handle possessives and has/is
-    modComm = re.sub(r"(\w+)'s", repl=r"\1 's", string=modComm)
+    modComm = re.sub(r"(\w+)'s", repl=r"\1 's", string=modComm, flags=re.IGNORECASE)
 
     # Handle plural possessives
-    modComm = re.sub(r"(\w+)s'", repl=r"\1s '", string=modComm)
+    modComm = re.sub(r"(\w+)s'", repl=r"\1s '", string=modComm, flags=re.IGNORECASE)
+
+    # Handle 've (e.g. should've)
+    modComm = re.sub(r"(\w*[a-zA-Z])'ve\b", repl=r"\1 've", string=modComm, flags=re.IGNORECASE)
+
+    # Handle 'm (e.g. I'm)
+    modComm = re.sub(r"\b([Ii])'m\b", repl=r"\1 'm", string=modComm, flags=re.IGNORECASE)
+
+    # Handle 're (e.g. You're)
+    modComm = re.sub(r"(\w*[a-zA-Z])'re\b", repl=r"\1 're", string=modComm, flags=re.IGNORECASE)
+
+    # Handle 'll (e.g. I'll)
+    modComm = re.sub(r"(\w*[a-zA-Z])'ll\b", repl=r"\1 'll", string=modComm, flags=re.IGNORECASE)
+
+    # Handle 'd (e.g. She'd)
+    modComm = re.sub(r"(\w*[a-zA-Z])'d\b", repl=r"\1 'd", string=modComm, flags=re.IGNORECASE)
 
     return modComm
 
