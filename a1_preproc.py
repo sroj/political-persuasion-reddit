@@ -144,6 +144,7 @@ def remove_stopwords(modComm):
 
 def separate_sentences(modComm):
     abb = read_all_abbreviations()
+    pn_abb = read_proper_name_abbreviations()
 
     abb_regex = "(" + "|".join(abb).replace(".", "\.") + ")"
 
