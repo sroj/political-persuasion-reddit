@@ -36,7 +36,7 @@ def remove_html_char_codes(modComm):
     return html.unescape(modComm)
 
 
-def read_abbreviations():
+def read_all_abbreviations():
     abbreviation_files = ["abbrev.english", "pn_abbrev.english"]
 
     abbreviations = set()
@@ -63,7 +63,7 @@ def read_stopwords():
 
 
 def split_punctuation(modComm):
-    abbreviations = read_abbreviations()
+    abbreviations = read_all_abbreviations()
 
     abbreviations_regex = "(" + "|".join(abbreviations).replace(".", "\.") + ")"
 
@@ -135,7 +135,7 @@ def remove_stopwords(modComm):
 
 
 def separate_sentences(modComm):
-    abb = read_abbreviations()
+    abb = read_all_abbreviations()
 
     abb_regex = "(" + "|".join(abb).replace(".", "\.") + ")"
 
