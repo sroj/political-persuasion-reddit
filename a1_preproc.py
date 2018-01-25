@@ -97,7 +97,6 @@ def repl_punctuation(matchobj):
 
 
 def split_clitics(modComm):
-
     verb_tokens = "(ca|had|ai|am|are|could|dare|did|does|do|has|have|is|need|must|ought|should|was|were|wo|would)"
 
     # Handle "verb + not"
@@ -135,6 +134,21 @@ def remove_stopwords(modComm):
     return re.sub(regex, "", modComm, flags=re.IGNORECASE)
 
 
+def separate_sentences(modComm):
+    abb = read_abbreviations()
+
+    abb_regex = "(" + "|".join(abb).replace(".", "\.") + ")"
+
+    return re.sub(
+        r'''
+        (?P<period>\."?)\ *(?=\w+)
+        ''',
+        r"\g<period>\n",
+        modComm,
+        flags=re.VERBOSE
+    )
+
+
 def preproc1(comment, steps=range(1, 11)):
     ''' This function pre-processes a single comment
 
@@ -170,7 +184,8 @@ def preproc1(comment, steps=range(1, 11)):
     if 8 in steps:
         print('TODO')
     if 9 in steps:
-        print('TODO')
+        print('Adding newline after each sentence')
+        modComm = separate_sentences(modComm)
     if 10 in steps:
         print('Lower-casing text')
         modComm = modComm.lower()
@@ -243,7 +258,7 @@ def main(args):
             print("File {} has {} comments".format(fullFile, num_comments))
 
             # TODO: select appropriate args.max lines
-            max_lines = args.max
+            max_lines = int(args.max)
 
             start_index = student_id % num_comments
             end_index = (start_index + max_lines) % num_comments
@@ -294,7 +309,7 @@ if __name__ == "__main__":
     parser.add_argument("--max", help="The maximum number of comments to read from each file", default=10000)
     args = parser.parse_args()
 
-    if args.max > 200272:
+    if int(args.max) > 200272:
         print("Error: If you want to read more than 200,272 comments per file, you have to read them all.")
         sys.exit(1)
 
