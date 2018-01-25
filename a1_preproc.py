@@ -143,19 +143,48 @@ def remove_stopwords(modComm):
 
 
 def separate_sentences(modComm):
-    abb = read_all_abbreviations()
     pn_abb = read_proper_name_abbreviations()
+    non_pn_abb = read_all_abbreviations() - pn_abb
 
-    abb_regex = "(" + "|".join(abb).replace(".", "\.") + ")"
+    # The last dot on proper name abbreviation should be removed to make matching easier later
+    # pn_abb = {re.sub(r"(\w+)\.$", r"\1", abb) for abb in pn_abb}
 
-    return re.sub(
+    pn_abb_regex = "(?P<pn_abb>(" + "|".join(pn_abb).replace(".", "\.") + r")\ +)"
+    non_pn_abb_regex = "(?P<non_pn_abb>(" + "|".join(non_pn_abb).replace(".", "\.") + r")\ +)"
+
+    modComm = re.sub(
         r'''
-        (?P<period>\."?)\ *(?=\w+)
-        ''',
-        r"\g<period>\n",
+        ((?P<period>\."?)\ *(?=\w+))
+        |
+        {pn_abb}(?=\w+)
+        |
+        {non_pn_abb}(?=\w+)
+        '''.format(pn_abb=pn_abb_regex, non_pn_abb=non_pn_abb_regex),
+        repl_sentence,
         modComm,
         flags=re.VERBOSE
     )
+
+    modComm = re.sub(r'([!?]+)\ *(?=[A-Z]+)', r"\1\n", modComm)
+
+    return modComm
+
+
+def repl_sentence(matchobj):
+    pn_abb = matchobj.group("pn_abb")
+    non_pn_abb = matchobj.group("non_pn_abb")
+    period = matchobj.group("period")
+
+    if pn_abb:
+        return pn_abb
+    elif non_pn_abb:
+        next_character = matchobj.string[matchobj.end("non_pn_abb")]
+        if next_character.isupper():
+            return non_pn_abb + "\n"
+        else:
+            return non_pn_abb
+    else:
+        return period + "\n"
 
 
 def preproc1(comment, steps=range(1, 11)):
