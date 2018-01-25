@@ -37,16 +37,24 @@ def remove_html_char_codes(modComm):
 
 
 def read_all_abbreviations():
-    abbreviation_files = ["abbrev.english", "pn_abbrev.english"]
+    files = ["abbrev.english", "pn_abbrev.english"]
+    return set(read_files_by_line(wordlists_dir, files))
 
-    abbreviations = set()
 
-    for abb_file in abbreviation_files:
-        with open(wordlists_dir + abb_file) as f:
+def read_proper_name_abbreviations():
+    files = ["pn_abbrev.english"]
+    return set(read_files_by_line(wordlists_dir, files))
+
+
+def read_files_by_line(directory, files):
+    lines = list()
+
+    for file in files:
+        with open(directory + file) as f:
             for line in f:
-                abbreviations.add(line.strip())
+                lines.append(line.strip())
 
-    return abbreviations
+    return lines
 
 
 def read_stopwords():
