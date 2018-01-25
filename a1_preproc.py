@@ -29,7 +29,7 @@ def remove_newlines(text):
 
 
 def remove_urls(text):
-    return re.sub('https?://[\w./\-:]+|www\.[\w./\-:]+', repl='', string=text)
+    return re.sub(r'(\bhttps?:?//[\w./\-:]+)|(\bwww\.[\w./\-:]+)', repl='', string=text)
 
 
 def remove_html_char_codes(modComm):
@@ -47,6 +47,19 @@ def read_abbreviations():
                 abbreviations.add(line.strip())
 
     return abbreviations
+
+
+def read_stopwords():
+    files = ["StopWords"]
+
+    words = set()
+
+    for file in files:
+        with open(wordlists_dir + file) as f:
+            for line in f:
+                words.add(line.strip())
+
+    return words
 
 
 def split_punctuation(modComm):
@@ -114,6 +127,14 @@ def split_clitics(modComm):
     return modComm
 
 
+def remove_stopwords(modComm):
+    stopwords = read_stopwords()
+
+    regex = r"\b(" + "|".join(stopwords) + r")\b"
+
+    return re.sub(regex, "", modComm, flags=re.IGNORECASE)
+
+
 def preproc1(comment, steps=range(1, 11)):
     ''' This function pre-processes a single comment
 
@@ -144,7 +165,8 @@ def preproc1(comment, steps=range(1, 11)):
     if 6 in steps:
         print('TODO')
     if 7 in steps:
-        print('TODO')
+        print('Removing stop words')
+        modComm = remove_stopwords(modComm)
     if 8 in steps:
         print('TODO')
     if 9 in steps:
