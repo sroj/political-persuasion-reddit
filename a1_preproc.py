@@ -187,6 +187,10 @@ def repl_sentence(matchobj):
         return period + "\n"
 
 
+def tag_part_of_speech(modComm):
+    pass
+
+
 def preproc1(comment, steps=range(1, 11)):
     ''' This function pre-processes a single comment
 
@@ -215,7 +219,8 @@ def preproc1(comment, steps=range(1, 11)):
         print('Splitting clitics')
         modComm = split_clitics(modComm)
     if 6 in steps:
-        print('TODO')
+        print('Tagging with part-of-speech')
+        modComm = tag_part_of_speech(modComm)
     if 7 in steps:
         print('Removing stop words')
         modComm = remove_stopwords(modComm)
