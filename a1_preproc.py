@@ -140,9 +140,13 @@ def split_clitics(modComm):
 def remove_stopwords(modComm):
     stopwords = read_stopwords()
 
-    regex = r"\b(" + "|".join(stopwords) + r")\b"
+    stopwords_regex = [sw + r"(?:/[\S$]+)*" for sw in stopwords]
 
-    return re.sub(regex, "", modComm, flags=re.IGNORECASE)
+    regex = r"(?:\s|^)(?:" + "|".join(stopwords_regex) + r")(?=\s|$)"
+
+    modComm = re.sub(regex, "", modComm, flags=re.IGNORECASE)
+
+    return re.sub(r'\s{2,}', repl=' ', string=modComm)
 
 
 def separate_sentences(modComm):
@@ -201,7 +205,7 @@ def tag_part_of_speech(modComm):
         idx = token.idx
         tagged_comment += " " + modComm[idx:idx + token_length] + "/" + tag
 
-    return tagged_comment
+    return tagged_comment.strip()
 
 
 def preproc1(comment, steps=range(1, 11)):
