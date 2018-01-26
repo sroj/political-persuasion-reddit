@@ -191,8 +191,6 @@ def repl_sentence(matchobj):
 
 
 def tag_part_of_speech(modComm):
-
-    modComm = "I'm crazy, e.g. I Don't know/him / do i?"
     tokens = nlp(modComm)
 
     tagged_comment = ""
