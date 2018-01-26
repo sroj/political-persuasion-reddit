@@ -208,6 +208,10 @@ def tag_part_of_speech(modComm):
     return tagged_comment.strip()
 
 
+def apply_lemmatization(modComm):
+    return modComm
+
+
 def preproc1(comment, steps=range(1, 11)):
     ''' This function pre-processes a single comment
 
@@ -242,7 +246,8 @@ def preproc1(comment, steps=range(1, 11)):
         print('Removing stop words')
         modComm = remove_stopwords(modComm)
     if 8 in steps:
-        print('TODO')
+        print('Applying lemmatization')
+        modComm = apply_lemmatization(modComm)
     if 9 in steps:
         print('Adding newline after each sentence')
         modComm = separate_sentences(modComm)
