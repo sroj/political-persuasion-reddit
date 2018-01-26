@@ -4,6 +4,7 @@ import json
 import os
 import re
 import sys
+import spacy
 
 # TODO Restore this!
 # TODO Restore this!
@@ -22,6 +23,8 @@ indir = prefix_a1 + 'data/';
 # prefix_wordlist = '/u/cs401/'
 prefix_wordlist = ''
 wordlists_dir = prefix_wordlist + 'Wordlists/'
+
+nlp = spacy.load('en', disable=['parser', 'ner'])
 
 
 def remove_newlines(text):
@@ -188,7 +191,19 @@ def repl_sentence(matchobj):
 
 
 def tag_part_of_speech(modComm):
-    pass
+
+    modComm = "I'm crazy, e.g. I Don't know/him / do i?"
+    tokens = nlp(modComm)
+
+    tagged_comment = ""
+
+    for token in tokens:
+        tag = token.tag_
+        token_length = len(token)
+        idx = token.idx
+        tagged_comment += " " + modComm[idx:idx + token_length] + "/" + tag
+
+    return tagged_comment
 
 
 def preproc1(comment, steps=range(1, 11)):
