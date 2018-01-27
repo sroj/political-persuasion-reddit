@@ -338,10 +338,20 @@ def apply_lemmatization(modComm):
 def lowercase(modComm):
     try:
         validate_input(modComm)
-
+        return re.sub(
+            r"(?:\s+|^)(\S+)(?=/[\S$]+(?:\s|$))"
+            r"|"
+            r"(?:\s+|^)(\S+)(?!/[\S$]+(?:\s|$))",
+            repl_lowercase,
+            modComm
+        )
     except RuntimeWarning as e:
         # print("Warning: {}".format(e))
         return modComm
+
+
+def repl_lowercase(matchobj):
+    return matchobj.group(0).lower()
 
 
 def preproc1(comment, steps=range(1, 11)):
