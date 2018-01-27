@@ -313,13 +313,19 @@ def apply_lemmatization(modComm):
                 print("Warning: Missing tag or token {}. Skipping it...".format(token_with_tag))
                 continue
 
+            token = token_with_tag[0]
             tag = token_with_tag[1]
 
-            if not tag:
-                print("Warning: Missing tag for token. Skipping it...")
+            if not tag or not token:
+                print("Warning: Missing tag or token. Skipping it...")
                 continue
 
-            lemmatized_comments.append(lemma + "/" + tag)
+            if lemma[0] == "-" and token[0] != "-":
+                # Special case required by the handout
+                print("Info: Handling special lemmatization case")
+                lemmatized_comments.append(token + "/" + tag)
+            else:
+                lemmatized_comments.append(lemma + "/" + tag)
 
         tagged_comment = " ".join(lemmatized_comments)
 
