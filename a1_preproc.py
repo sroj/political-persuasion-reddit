@@ -8,18 +8,7 @@ import sys
 import spacy
 import spacy.tokens
 
-# TODO Restore this!
-# TODO Restore this!
-# TODO Restore this!
-# TODO Restore this!
-# TODO Restore this!
-# TODO Restore this!
-# TODO Restore this!
-# TODO Restore this!
-# TODO Restore this!
-# TODO Restore this!
-# prefix_a1 = '/u/cs401/A1/'
-prefix_a1 = ''
+prefix_a1 = '/u/cs401/A1/'
 indir = prefix_a1 + 'data/';
 
 # prefix_wordlist = '/u/cs401/'
