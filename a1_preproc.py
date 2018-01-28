@@ -189,28 +189,25 @@ def separate_sentences(modComm):
         pn_abb = read_proper_name_abbreviations()
         non_pn_abb = read_all_abbreviations() - pn_abb
 
-        # The last dot on proper name abbreviation should be removed to make matching easier later
-        # pn_abb = {re.sub(r"(\w+)\.$", r"\1", abb) for abb in pn_abb}
+        pn_abb_regex = "(?P<pn_abb>(" + "|".join(pn_abb).replace(".", "\.") + r")/[^\s/]+\s+)"
+        non_pn_abb_regex = "(?P<non_pn_abb>(" + "|".join(non_pn_abb).replace(".", "\.") + r")/[^\s/]+\s+)"
 
-        pn_abb_regex = "(?P<pn_abb>(" + "|".join(pn_abb).replace(".", "\.") + r")\ +)"
-        non_pn_abb_regex = "(?P<non_pn_abb>(" + "|".join(non_pn_abb).replace(".", "\.") + r")\ +)"
-
-        modComm = re.sub(
+        result = re.sub(
             r'''
-            ((?P<period>\."?)\ *(?=\w+))
+            (?P<period>\./[^\s/]+\s+("/[^\s/]+\s+)?)
             |
-            {pn_abb}(?=\w+)
+            {pn_abb}
             |
-            {non_pn_abb}(?=\w+)
+            {non_pn_abb}
             '''.format(pn_abb=pn_abb_regex, non_pn_abb=non_pn_abb_regex),
             repl_sentence,
             modComm,
             flags=re.VERBOSE
         )
 
-        modComm = re.sub(r'([!?]+)\ *(?=[A-Z]+)', r"\1\n", modComm)
+        result = re.sub(r'((?:[!?]+/[^\s/]+)(?:\s+"/[^\s/]+)?)(?=\s+[A-Z]+)', r"\1\n", result)
 
-        return modComm
+        return result
     except RuntimeWarning as e:
         # print("Warning: {}".format(e))
         return modComm
