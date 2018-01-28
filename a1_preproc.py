@@ -239,8 +239,11 @@ def repl_sentence(matchobj):
 def tag_part_of_speech(modComm):
     try:
         validate_input(modComm)
-        tokens = nlp(modComm)
-        tagged_comment = ""
+
+        splitted_comment = re.split(r"\s+", modComm)
+
+        tokens = spacy.tokens.Doc(nlp.vocab, words=splitted_comment)
+        tokens = nlp.tagger(tokens)
 
         tagged_comments = list()
 
