@@ -67,11 +67,38 @@ all_abbreviations = read_all_abbreviations()
 pn_abbreviations = read_proper_name_abbreviations()
 non_pn_abbreviations = all_abbreviations - pn_abbreviations
 stopwords = read_stopwords()
+verb_tokens = "(ca|had|ai|am|are|could|dare|did|does|do|has|have|is|need|must|ought|should|was|were|wo|would)"
+
+# REGEX
 
 regex_stopwords = re.compile(
     r"(?:\s|^)(?:" + "|".join([sw + r"(?:/[\S$]+)*" for sw in stopwords]) + r")(?=\s|$)",
     re.IGNORECASE
 )
+
+# Handle "verb + not"
+regex_verb_not = re.compile(r"\b" + verb_tokens + r"n't\b", re.IGNORECASE)
+
+# Handle possessives and has/is
+regex_possesives = re.compile(r"(\w+)'s", re.IGNORECASE)
+
+# Handle plural possessives
+regex_plural_possesives = re.compile(r"(\w+)s'", re.IGNORECASE)
+
+# Handle 've (e.g. should've)
+regex_have = re.compile(r"(\w*[a-zA-Z])'ve\b", re.IGNORECASE)
+
+# Handle 'm (e.g. I'm)
+regex_am = re.compile(r"\b([Ii])'m\b", re.IGNORECASE)
+
+# Handle 're (e.g. You're)
+regex_are = re.compile(r"(\w*[a-zA-Z])'re\b", re.IGNORECASE)
+
+# Handle 'll (e.g. I'll)
+regex_will = re.compile(r"(\w*[a-zA-Z])'ll\b", re.IGNORECASE)
+
+# Handle 'd (e.g. She'd)
+regex_had_would = re.compile(r"(\w*[a-zA-Z])'d\b", re.IGNORECASE)
 
 
 def validate_input(text):
@@ -148,31 +175,30 @@ def repl_punctuation(matchobj):
 def split_clitics(modComm):
     try:
         validate_input(modComm)
-        verb_tokens = "(ca|had|ai|am|are|could|dare|did|does|do|has|have|is|need|must|ought|should|was|were|wo|would)"
 
         # Handle "verb + not"
-        modComm = re.sub(r"\b" + verb_tokens + r"n't\b", repl=r"\1 n't", string=modComm, flags=re.IGNORECASE)
+        modComm = regex_verb_not.sub(r"\1 n't", string=modComm)
 
         # Handle possessives and has/is
-        modComm = re.sub(r"(\w+)'s", repl=r"\1 's", string=modComm, flags=re.IGNORECASE)
+        modComm = regex_possesives.sub(r"\1 's", string=modComm)
 
         # Handle plural possessives
-        modComm = re.sub(r"(\w+)s'", repl=r"\1s '", string=modComm, flags=re.IGNORECASE)
+        modComm = regex_plural_possesives.sub(r"\1s '", string=modComm)
 
         # Handle 've (e.g. should've)
-        modComm = re.sub(r"(\w*[a-zA-Z])'ve\b", repl=r"\1 've", string=modComm, flags=re.IGNORECASE)
+        modComm = regex_have.sub(r"\1 've", string=modComm)
 
         # Handle 'm (e.g. I'm)
-        modComm = re.sub(r"\b([Ii])'m\b", repl=r"\1 'm", string=modComm, flags=re.IGNORECASE)
+        modComm = regex_am.sub(r"\1 'm", string=modComm)
 
         # Handle 're (e.g. You're)
-        modComm = re.sub(r"(\w*[a-zA-Z])'re\b", repl=r"\1 're", string=modComm, flags=re.IGNORECASE)
+        modComm = regex_are.sub(r"\1 're", string=modComm)
 
         # Handle 'll (e.g. I'll)
-        modComm = re.sub(r"(\w*[a-zA-Z])'ll\b", repl=r"\1 'll", string=modComm, flags=re.IGNORECASE)
+        modComm = regex_will.sub(r"\1 'll", string=modComm)
 
         # Handle 'd (e.g. She'd)
-        modComm = re.sub(r"(\w*[a-zA-Z])'d\b", repl=r"\1 'd", string=modComm, flags=re.IGNORECASE)
+        modComm = regex_had_would.sub(r"\1 'd", string=modComm)
 
         return modComm
     except RuntimeWarning as e:
