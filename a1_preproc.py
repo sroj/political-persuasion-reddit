@@ -68,6 +68,11 @@ pn_abbreviations = read_proper_name_abbreviations()
 non_pn_abbreviations = all_abbreviations - pn_abbreviations
 stopwords = read_stopwords()
 
+regex_stopwords = re.compile(
+    r"(?:\s|^)(?:" + "|".join([sw + r"(?:/[\S$]+)*" for sw in stopwords]) + r")(?=\s|$)",
+    re.IGNORECASE
+)
+
 
 def validate_input(text):
     if not text:
@@ -178,9 +183,7 @@ def split_clitics(modComm):
 def remove_stopwords(modComm):
     try:
         validate_input(modComm)
-        stopwords_regex = [sw + r"(?:/[\S$]+)*" for sw in stopwords]
-        regex = r"(?:\s|^)(?:" + "|".join(stopwords_regex) + r")(?=\s|$)"
-        modComm = re.sub(regex, "", modComm, flags=re.IGNORECASE)
+        modComm = regex_stopwords.sub("", modComm)
         return remove_repeated_whitespace(modComm)
     except RuntimeWarning as e:
         # print("Warning: {}".format(e))
