@@ -29,38 +29,6 @@ wordlists_dir = prefix_wordlist + 'Wordlists/'
 nlp = spacy.load('en', disable=['parser', 'ner'])
 
 
-def validate_input(text):
-    if not text:
-        raise RuntimeWarning("Not processing an empty string")
-
-
-def remove_newlines(text):
-    try:
-        validate_input(text)
-        return text.replace("\n", " ").replace("\r", " ")
-    except RuntimeWarning as e:
-        # print("Warning: {}".format(e))
-        return text
-
-
-def remove_urls(text):
-    try:
-        validate_input(text)
-        return re.sub(r'(https?:?//[\w./\-:]+)|(www\.[\w./\-:]+)', repl='', string=text)
-    except RuntimeWarning as e:
-        # print("Warning: {}".format(e))
-        return text
-
-
-def remove_html_char_codes(modComm):
-    try:
-        validate_input(modComm)
-        return html.unescape(modComm)
-    except RuntimeWarning as e:
-        # print("Warning: {}".format(e))
-        return modComm
-
-
 def read_all_abbreviations():
     files = ["abbrev.english", "pn_abbrev.english"]
     return set(read_files_by_line(wordlists_dir, files))
@@ -95,12 +63,49 @@ def read_stopwords():
     return words
 
 
+all_abbreviations = read_all_abbreviations()
+pn_abbreviations = read_proper_name_abbreviations()
+non_pn_abbreviations = all_abbreviations - pn_abbreviations
+stopwords = read_stopwords()
+
+
+def validate_input(text):
+    if not text:
+        raise RuntimeWarning("Not processing an empty string")
+
+
+def remove_newlines(text):
+    try:
+        validate_input(text)
+        return text.replace("\n", " ").replace("\r", " ")
+    except RuntimeWarning as e:
+        # print("Warning: {}".format(e))
+        return text
+
+
+def remove_urls(text):
+    try:
+        validate_input(text)
+        return re.sub(r'(https?:?//[\w./\-:]+)|(www\.[\w./\-:]+)', repl='', string=text)
+    except RuntimeWarning as e:
+        # print("Warning: {}".format(e))
+        return text
+
+
+def remove_html_char_codes(modComm):
+    try:
+        validate_input(modComm)
+        return html.unescape(modComm)
+    except RuntimeWarning as e:
+        # print("Warning: {}".format(e))
+        return modComm
+
+
 def split_punctuation(modComm):
     try:
         validate_input(modComm)
-        abbreviations = read_all_abbreviations()
 
-        abbreviations_regex = r"(?:\b(" + "|".join(abbreviations).replace(".", "\.") + "))"
+        abbreviations_regex = r"(?:\b(" + "|".join(all_abbreviations).replace(".", "\.") + "))"
 
         number_with_separator_regex = r"\d{1,3}(,\d{3})+(\.\d+)?"
         number_without_separator_regex = r"\b\d+\b"
@@ -173,7 +178,6 @@ def split_clitics(modComm):
 def remove_stopwords(modComm):
     try:
         validate_input(modComm)
-        stopwords = read_stopwords()
         stopwords_regex = [sw + r"(?:/[\S$]+)*" for sw in stopwords]
         regex = r"(?:\s|^)(?:" + "|".join(stopwords_regex) + r")(?=\s|$)"
         modComm = re.sub(regex, "", modComm, flags=re.IGNORECASE)
@@ -186,11 +190,9 @@ def remove_stopwords(modComm):
 def separate_sentences(modComm):
     try:
         validate_input(modComm)
-        pn_abb = read_proper_name_abbreviations()
-        non_pn_abb = read_all_abbreviations() - pn_abb
 
-        pn_abb_regex = "(?P<pn_abb>(" + "|".join(pn_abb).replace(".", "\.") + r")/[^\s/]+\s+)"
-        non_pn_abb_regex = "(?P<non_pn_abb>(" + "|".join(non_pn_abb).replace(".", "\.") + r")/[^\s/]+\s+)"
+        pn_abb_regex = "(?P<pn_abb>(" + "|".join(pn_abbreviations).replace(".", "\.") + r")/[^\s/]+\s+)"
+        non_pn_abb_regex = "(?P<non_pn_abb>(" + "|".join(non_pn_abbreviations).replace(".", "\.") + r")/[^\s/]+\s+)"
 
         result = re.sub(
             r'''
