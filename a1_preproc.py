@@ -127,9 +127,6 @@ def remove_repeated_whitespace(result):
 
 
 def repl_punctuation(matchobj):
-    start = matchobj.start()
-    end = matchobj.end()
-    # print("Start, end: {}, {}".format(start, end))
     match = matchobj.group(0)
 
     if match is not None:
