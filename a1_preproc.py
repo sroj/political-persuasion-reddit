@@ -100,7 +100,7 @@ def split_punctuation(modComm):
         validate_input(modComm)
         abbreviations = read_all_abbreviations()
 
-        abbreviations_regex = "(" + "|".join(abbreviations).replace(".", "\.") + ")"
+        abbreviations_regex = r"(?:\b(" + "|".join(abbreviations).replace(".", "\.") + "))"
 
         number_with_separator_regex = r"\d{1,3}(,\d{3})+(\.\d+)?"
         number_without_separator_regex = r"\b\d+\b"
