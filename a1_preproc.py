@@ -519,7 +519,8 @@ def main(args):
             preprocess_bodies(sampled_data)
 
             # TODO: append the result to 'allOutput'
-            allOutput.append(sampled_data)
+            for datum in sampled_data:
+                allOutput.append(datum)
 
             print("----------\n")
 
