@@ -3,6 +3,90 @@ import sys
 import argparse
 import os
 import json
+import re
+
+prefix_wordlist = ''
+wordlists_dir = prefix_wordlist + 'Wordlists/'
+
+regex_tokenizer = re.compile(r"[^\S\n]*(\n)+[^\S\n]*|[^\S\n]+")
+
+
+def read_files_by_line(directory, files):
+    lines = list()
+
+    for file in files:
+        with open(directory + file) as f:
+            for line in f:
+                lines.append(line.strip())
+
+    return lines
+
+
+def read_first_person_pronouns():
+    files = ["First-person"]
+    return set(read_files_by_line(wordlists_dir, files))
+
+
+def read_second_person_pronouns():
+    files = ["Second-person"]
+    return set(read_files_by_line(wordlists_dir, files))
+
+
+def read_third_person_pronouns():
+    files = ["Third-person"]
+    return set(read_files_by_line(wordlists_dir, files))
+
+
+first_person_pronouns = read_first_person_pronouns()
+second_person_pronouns = read_second_person_pronouns()
+third_person_pronouns = read_third_person_pronouns()
+
+# First person pronouns
+fpp_alternation = r"|".join(first_person_pronouns)
+fpp_group = r"(?:{})".format(fpp_alternation)
+regex_fpp = re.compile(r"{0}/[^\s/]+".format(fpp_group), re.IGNORECASE)
+
+# Second person pronouns
+spp_alternation = r"|".join(second_person_pronouns)
+spp_group = r"(?:{})".format(spp_alternation)
+regex_spp = re.compile(r"{0}/[^\s/]+".format(spp_group), re.IGNORECASE)
+
+# Third person pronouns
+tpp_alternation = r"|".join(third_person_pronouns)
+tpp_group = r"(?:{})".format(tpp_alternation)
+regex_tpp = re.compile(r"{0}/[^\s/]+".format(tpp_group), re.IGNORECASE)
+
+
+def extract_features(tokens):
+    features = np.zeros((173,))
+
+    for idx, token in enumerate(tokens):
+        if not token:
+            continue
+
+        token = token.strip()
+
+        # Feature 1: Number of first-person pronouns
+        match = regex_fpp.match(token)
+
+        if match:
+            features[0] += 1
+
+        # Feature 2: Number of second-person pronouns
+        match = regex_spp.match(token)
+
+        if match:
+            features[1] += 1
+
+        # Feature 3: Number of third-person pronouns
+        match = regex_tpp.match(token)
+
+        if match:
+            features[2] += 1
+
+        # Feature 4: Number of coordinating conjunctions
+
+    return features
 
 
 def extract1(comment):
@@ -14,7 +98,15 @@ def extract1(comment):
     Returns:
         feats : numpy Array, a 173-length vector of floating point features (only the first 29 are expected to be filled, here)
     '''
-    return np.ones((173,))
+
+    # This shouldn't be necessary, but for sanity...
+    comment = comment.strip()
+
+    tokens = regex_tokenizer.split(comment)
+
+    features = extract_features(tokens)
+
+    return features
 
 
 def encode_label(label):
