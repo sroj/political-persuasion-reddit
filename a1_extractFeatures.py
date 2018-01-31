@@ -14,15 +14,31 @@ def extract1(comment):
     Returns:
         feats : numpy Array, a 173-length vector of floating point features (only the first 29 are expected to be filled, here)
     '''
-    print('TODO')
-    # TODO: your code here
+    return np.ones((173,))
+
+
+def encode_label(label):
+    encoding = {
+        "Left": 0,
+        "Center": 1,
+        "Right": 2,
+        "Alt": 3
+    }
+
+    return encoding[label]
 
 
 def main(args):
     data = json.load(open(args.input))
     feats = np.zeros((len(data), 173 + 1))
 
-    # TODO: your code here
+    for i, datum in enumerate(data):
+        body = datum['body']
+        cat = datum['cat']
+        encoded_cat = encode_label(cat)
+        features = extract1(body)
+        features = np.append(features, [encoded_cat], axis=0)
+        feats[i] = features
 
     np.savez_compressed(args.output, feats)
 
