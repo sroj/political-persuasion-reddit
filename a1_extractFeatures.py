@@ -42,19 +42,22 @@ second_person_pronouns = read_second_person_pronouns()
 third_person_pronouns = read_third_person_pronouns()
 
 # First person pronouns
-fpp_alternation = r"|".join(first_person_pronouns)
+fpp_alternation = "|".join(first_person_pronouns)
 fpp_group = r"(?:{})".format(fpp_alternation)
-regex_fpp = re.compile(r"{0}/[^\s/]+".format(fpp_group), re.IGNORECASE)
+regex_fpp = re.compile(r"^{0}/[^\s/]+$".format(fpp_group), re.IGNORECASE)
 
 # Second person pronouns
-spp_alternation = r"|".join(second_person_pronouns)
+spp_alternation = "|".join(second_person_pronouns)
 spp_group = r"(?:{})".format(spp_alternation)
-regex_spp = re.compile(r"{0}/[^\s/]+".format(spp_group), re.IGNORECASE)
+regex_spp = re.compile(r"^{0}/[^\s/]+$".format(spp_group), re.IGNORECASE)
 
 # Third person pronouns
-tpp_alternation = r"|".join(third_person_pronouns)
+tpp_alternation = "|".join(third_person_pronouns)
 tpp_group = r"(?:{})".format(tpp_alternation)
-regex_tpp = re.compile(r"{0}/[^\s/]+".format(tpp_group), re.IGNORECASE)
+regex_tpp = re.compile(r"^{0}/[^\s/]+$".format(tpp_group), re.IGNORECASE)
+
+# Coordinating conjunctions
+regex_cc = re.compile(r"^[^\s/]+/CC$")
 
 
 def extract_features(tokens):
@@ -68,23 +71,23 @@ def extract_features(tokens):
 
         # Feature 1: Number of first-person pronouns
         match = regex_fpp.match(token)
-
         if match:
             features[0] += 1
 
         # Feature 2: Number of second-person pronouns
         match = regex_spp.match(token)
-
         if match:
             features[1] += 1
 
         # Feature 3: Number of third-person pronouns
         match = regex_tpp.match(token)
-
         if match:
             features[2] += 1
 
         # Feature 4: Number of coordinating conjunctions
+        match = regex_cc.match(token)
+        if match:
+            features[3] += 1
 
     return features
 
