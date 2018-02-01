@@ -63,7 +63,14 @@ regex_cc = re.compile(r"^[^\s/]+/CC$")
 regex_ptv = re.compile(r"^[^\s/]+/VBD$")
 
 # Future tense verbs
+# TODO
 regex_ftv = re.compile(r"", re.IGNORECASE)
+
+# Single comma
+regex_single_comma = re.compile(r"^,/[^\s/]+$")
+
+# Multi-character punctuation
+regex_mc_punctuation = re.compile(r'^[!"#$%&()*+,\-./:;<=>?@\[\\\]^_{|}~]{2,}/[^\s/]+$')
 
 
 def extract_features(tokens):
@@ -101,9 +108,20 @@ def extract_features(tokens):
             features[4] += 1
 
         # Feature 6: Number of future tense verbs
+        # TODO
         match_ftv = regex_ftv.match(token)
         if match_ftv:
             features[5] += 1
+
+        # Feature 7: Number of commas
+        match_single_comma = regex_single_comma.match(token)
+        if match_single_comma:
+            features[6] += 1
+
+        # Feature 8: Number of multi-character punctuation tokens
+        match_mc_punctuation = regex_mc_punctuation.match(token)
+        if match_mc_punctuation:
+            features[7] += 1
 
     return features
 
