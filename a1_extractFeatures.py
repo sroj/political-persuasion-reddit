@@ -62,6 +62,9 @@ regex_cc = re.compile(r"^[^\s/]+/CC$")
 # Past tense verbs
 regex_ptv = re.compile(r"^[^\s/]+/VBD$")
 
+# Future tense verbs
+regex_ftv = re.compile(r"", re.IGNORECASE)
+
 
 def extract_features(tokens):
     features = np.zeros((173,))
@@ -73,29 +76,34 @@ def extract_features(tokens):
         token = token.strip()
 
         # Feature 1: Number of first-person pronouns
-        match = regex_fpp.match(token)
-        if match:
+        match_fpp = regex_fpp.match(token)
+        if match_fpp:
             features[0] += 1
 
         # Feature 2: Number of second-person pronouns
-        match = regex_spp.match(token)
-        if match:
+        match_spp = regex_spp.match(token)
+        if match_spp:
             features[1] += 1
 
         # Feature 3: Number of third-person pronouns
-        match = regex_tpp.match(token)
-        if match:
+        match_tpp = regex_tpp.match(token)
+        if match_tpp:
             features[2] += 1
 
         # Feature 4: Number of coordinating conjunctions
-        match = regex_cc.match(token)
-        if match:
+        match_cc = regex_cc.match(token)
+        if match_cc:
             features[3] += 1
 
         # Feature 5: Number of past tense verbs
-        match = regex_ptv.match(token)
-        if match:
+        match_ptv = regex_ptv.match(token)
+        if match_ptv:
             features[4] += 1
+
+        # Feature 6: Number of future tense verbs
+        match_ftv = regex_ftv.match(token)
+        if match_ftv:
+            features[5] += 1
 
     return features
 
