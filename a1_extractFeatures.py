@@ -59,6 +59,9 @@ regex_tpp = re.compile(r"^{0}/[^\s/]+$".format(tpp_group), re.IGNORECASE)
 # Coordinating conjunctions
 regex_cc = re.compile(r"^[^\s/]+/CC$")
 
+# Past tense verbs
+regex_ptv = re.compile(r"^[^\s/]+/VBD$")
+
 
 def extract_features(tokens):
     features = np.zeros((173,))
@@ -88,6 +91,11 @@ def extract_features(tokens):
         match = regex_cc.match(token)
         if match:
             features[3] += 1
+
+        # Feature 5: Number of past tense verbs
+        match = regex_ptv.match(token)
+        if match:
+            features[4] += 1
 
     return features
 
