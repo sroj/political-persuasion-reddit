@@ -82,30 +82,7 @@ def extract_features(tokens):
 
         token = token.strip()
 
-        # Feature 1: Number of first-person pronouns
-        match_fpp = regex_fpp.match(token)
-        if match_fpp:
-            features[0] += 1
-
-        # Feature 2: Number of second-person pronouns
-        match_spp = regex_spp.match(token)
-        if match_spp:
-            features[1] += 1
-
-        # Feature 3: Number of third-person pronouns
-        match_tpp = regex_tpp.match(token)
-        if match_tpp:
-            features[2] += 1
-
-        # Feature 4: Number of coordinating conjunctions
-        match_cc = regex_cc.match(token)
-        if match_cc:
-            features[3] += 1
-
-        # Feature 5: Number of past tense verbs
-        match_ptv = regex_ptv.match(token)
-        if match_ptv:
-            features[4] += 1
+        extract_features_1_through_5(features, token)
 
         # Feature 6: Number of future tense verbs
         # TODO
@@ -124,6 +101,33 @@ def extract_features(tokens):
             features[7] += 1
 
     return features
+
+
+def extract_features_1_through_5(features, token):
+    # Feature 1: Number of first-person pronouns
+    match_fpp = regex_fpp.match(token)
+    if match_fpp:
+        features[0] += 1
+
+    # Feature 2: Number of second-person pronouns
+    match_spp = regex_spp.match(token)
+    if match_spp:
+        features[1] += 1
+
+    # Feature 3: Number of third-person pronouns
+    match_tpp = regex_tpp.match(token)
+    if match_tpp:
+        features[2] += 1
+
+    # Feature 4: Number of coordinating conjunctions
+    match_cc = regex_cc.match(token)
+    if match_cc:
+        features[3] += 1
+
+    # Feature 5: Number of past tense verbs
+    match_ptv = regex_ptv.match(token)
+    if match_ptv:
+        features[4] += 1
 
 
 def extract1(comment):
