@@ -126,18 +126,17 @@ def split_punctuation(modComm):
     try:
         validate_input(modComm)
 
-        abbreviations_regex = r"(?:\b(" + "|".join(all_abbreviations).replace(".", "\.") + "))"
+        abbreviations_regex = r"(?:\b(?:" + "|".join(all_abbreviations).replace(".", "\.") + "))"
 
         number_with_separator_regex = r"\d{1,3}(,\d{3})+(\.\d+)?"
         number_without_separator_regex = r"\b\d+\b"
 
-        # TODO Maybe improve handling of cases like: ?:# i.e. multiple punctuation concatenated together
         pattern = abbreviations_regex + "|" \
                   + number_with_separator_regex + "|" \
                   + number_without_separator_regex + "|" \
-                  + r'([!"#$%&()*+,-./:;<=>?@\[\\\]^_{|}~]+)'
+                  + r'(?:[!"#$%&()*+,\-./:;<=>?@\[\\\]^_{|}~]+)'
 
-        result = re.sub(pattern=pattern, repl=repl_punctuation, string=modComm)
+        result = re.sub(pattern=pattern, repl=r" \g<0> ", string=modComm)
 
         # Remove repeated spaces
         result = remove_repeated_whitespace(result)
@@ -150,15 +149,6 @@ def split_punctuation(modComm):
 
 def remove_repeated_whitespace(result):
     return re.sub(r'\s{2,}', repl=' ', string=result).strip()
-
-
-def repl_punctuation(matchobj):
-    match = matchobj.group(0)
-
-    if match is not None:
-        return " " + match + " "
-
-    return match
 
 
 def split_clitics(modComm):
