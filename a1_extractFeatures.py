@@ -4,6 +4,7 @@ import argparse
 import os
 import json
 import re
+import functools
 
 prefix_wordlist = ''
 wordlists_dir = prefix_wordlist + 'Wordlists/'
@@ -64,7 +65,9 @@ regex_ptv = re.compile(r"^[^\s/]+/VBD$")
 
 # Future tense verbs
 # TODO
-regex_ftv = re.compile(r"", re.IGNORECASE)
+regex_ftv = re.compile(r"(?:\s+|^)(?:will|'ll)/[^\s/]+(?:\s+|$)", re.IGNORECASE)
+regex_gonna_vb = re.compile(r"(?:\s+|^)gonna/[^\s/]+\s+\S+/VB[DGNPZ]?(?:\s+|$)", re.IGNORECASE)
+regex_going_to_vb = re.compile(r"(?:\s+|^)going/[^\s/]+\s+to/[^\s/]+\s+\S+/VB[DGNPZ]?(?:\s+|$)", re.IGNORECASE)
 
 # Single comma
 regex_single_comma = re.compile(r"^,/[^\s/]+$")
@@ -72,9 +75,40 @@ regex_single_comma = re.compile(r"^,/[^\s/]+$")
 # Multi-character punctuation
 regex_mc_punctuation = re.compile(r'^[!"#$%&()*+,\-./:;<=>?@\[\\\]^_{|}~]{2,}/[^\s/]+$')
 
+# Multi-character punctuation, without PoS tags
+regex_mc_punctuation_no_tag = re.compile(r'^[!"#$%&()*+,\-./:;<=>?@\[\\\]^_{|}~]+$')
 
-def extract_features(tokens):
+# PoS tags
+regex_pos = re.compile(r"(\S+)/[^\s/]+", re.IGNORECASE)
+
+regex_newline = re.compile(r"\n+")
+
+
+def extract_features(comment):
     features = np.zeros((173,))
+
+    # Precalculations for features 15 and 16
+    no_tag_comment = regex_pos.sub(r"\1", comment)
+    no_tag_comment = no_tag_comment.strip()
+    num_sentences = len(regex_newline.split(no_tag_comment))
+    no_tag_no_newline_comment = no_tag_comment.replace("\n", " ")
+    tokens = list(filter(lambda x: x and x != "\n", regex_tokenizer.split(no_tag_no_newline_comment)))
+    num_tokens = len(tokens)
+    tokens_exc_multicharacter_punct = filter(lambda x: not regex_mc_punctuation_no_tag.match(x), tokens)
+    sum_tokens_length = functools.reduce(lambda acc, x: acc + len(x), tokens_exc_multicharacter_punct, 0)
+
+    # Feature 6: Number of future tense verbs
+    # It's better to extract feature 6 before tokenizing the comment down below...
+    comment, count = regex_ftv.subn(" ", comment)
+    features[5] += count
+
+    comment, count = regex_gonna_vb.subn(" ", comment)
+    features[5] += count
+
+    comment, count = regex_going_to_vb.subn(" ", comment)
+    features[5] += count
+
+    tokens = regex_tokenizer.split(comment)
 
     for idx, token in enumerate(tokens):
         if not token:
@@ -83,12 +117,6 @@ def extract_features(tokens):
         token = token.strip()
 
         extract_features_1_through_5(features, token)
-
-        # Feature 6: Number of future tense verbs
-        # TODO
-        match_ftv = regex_ftv.match(token)
-        if match_ftv:
-            features[5] += 1
 
         # Feature 7: Number of commas
         match_single_comma = regex_single_comma.match(token)
@@ -100,7 +128,7 @@ def extract_features(tokens):
         if match_mc_punctuation:
             features[7] += 1
 
-    return features
+    return features, num_tokens, num_sentences, sum_tokens_length
 
 
 def extract_features_1_through_5(features, token):
@@ -143,9 +171,7 @@ def extract1(comment):
     # This shouldn't be necessary, but for sanity...
     comment = comment.strip()
 
-    tokens = regex_tokenizer.split(comment)
-
-    features = extract_features(tokens)
+    features = extract_features(comment)
 
     return features
 
