@@ -93,26 +93,9 @@ regex_newline = re.compile(r"\n+")
 def extract_features(comment):
     features = np.zeros((173,))
 
-    # Precalculations for features 15 and 16
-    no_tag_comment = regex_pos.sub(r"\1", comment)
-    no_tag_comment = no_tag_comment.strip()
-    num_sentences = len(regex_newline.split(no_tag_comment))
-    no_tag_no_newline_comment = no_tag_comment.replace("\n", " ")
-    tokens = list(filter(lambda x: x and x != "\n", regex_tokenizer.split(no_tag_no_newline_comment)))
-    num_tokens = len(tokens)
-    tokens_exc_multicharacter_punct = filter(lambda x: not regex_mc_punctuation_no_tag.match(x), tokens)
-    sum_tokens_length = functools.reduce(lambda acc, x: acc + len(x), tokens_exc_multicharacter_punct, 0)
+    extract_features_15_through_17(comment, features)
 
-    # Feature 6: Number of future tense verbs
-    # It's better to extract feature 6 before tokenizing the comment down below...
-    comment, count = regex_ftv.subn(" ", comment)
-    features[5] += count
-
-    comment, count = regex_gonna_vb.subn(" ", comment)
-    features[5] += count
-
-    comment, count = regex_going_to_vb.subn(" ", comment)
-    features[5] += count
+    comment = extract_feature_6(comment, features)
 
     tokens = regex_tokenizer.split(comment)
 
@@ -144,7 +127,39 @@ def extract_features(comment):
         if match_noun_proper:
             features[9] += 1
 
-    return features, num_tokens, num_sentences, sum_tokens_length
+    return features
+
+
+def extract_feature_6(comment, features):
+    # Feature 6: Number of future tense verbs
+    # It's better to extract feature 6 before tokenizing the comment down below...
+    comment, count = regex_ftv.subn(" ", comment)
+    features[5] += count
+
+    comment, count = regex_gonna_vb.subn(" ", comment)
+    features[5] += count
+
+    comment, count = regex_going_to_vb.subn(" ", comment)
+    features[5] += count
+    return comment
+
+
+def extract_features_15_through_17(comment, features):
+    # Feature 17: Number of sentences
+    no_tag_comment = regex_pos.sub(r"\1", comment).strip()
+    num_sentences = len(regex_newline.split(no_tag_comment))
+    features[16] = num_sentences
+
+    # Feature 15: Average length of sentences, in tokens
+    no_tag_no_newline_comment = no_tag_comment.replace("\n", " ")
+    tokens = list(filter(lambda x: x and x != "\n", regex_tokenizer.split(no_tag_no_newline_comment)))
+    num_tokens = len(tokens)
+    features[14] = num_tokens / num_sentences
+
+    # Feature 16: Average length of tokens, excluding punctuation-only tokens, in characters
+    tokens_exc_multicharacter_punct = filter(lambda x: not regex_mc_punctuation_no_tag.match(x), tokens)
+    sum_tokens_length = functools.reduce(lambda acc, x: acc + len(x), tokens_exc_multicharacter_punct, 0)
+    features[15] = sum_tokens_length / num_tokens
 
 
 def extract_features_1_through_5(features, token):
