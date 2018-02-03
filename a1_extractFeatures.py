@@ -37,9 +37,15 @@ def read_third_person_pronouns():
     return set(read_files_by_line(wordlists_dir, files))
 
 
+def read_slang_acronyms():
+    files = ["Slang"]
+    return set(read_files_by_line(wordlists_dir, files))
+
+
 first_person_pronouns = read_first_person_pronouns()
 second_person_pronouns = read_second_person_pronouns()
 third_person_pronouns = read_third_person_pronouns()
+slang_acronyms = set(filter(None, read_slang_acronyms()))
 
 # First person pronouns
 fpp_alternation = "|".join(first_person_pronouns)
@@ -95,6 +101,10 @@ regex_wh_words = re.compile(r'^\S+/(?:WP\$?|WRB|WDT)$')
 
 # Words in uppercase (3 or more letters long)
 regex_uppercase_words_3_chars = re.compile(r'^[A-Z]{3,}/[^\s/]+$')
+
+# Slang acronyms
+slang_acronyms_alternation = "(?:" + "|".join(slang_acronyms) + ")"
+regex_slang_acronyms = re.compile(r'^{}/[^\s/]+$'.format(slang_acronyms_alternation), re.IGNORECASE)
 
 
 def extract_features(comment):
@@ -166,6 +176,10 @@ def extract_features_11_through_14(features, token):
     # Feature 12: Number of wh-words
     if regex_wh_words.match(token):
         features[11] += 1
+
+    # Feature 13: Slang acronyms
+    if regex_slang_acronyms.match(token):
+        features[12] += 1
 
     # Feature 14: Number of words in uppercase (>= 3 letters long)
     if regex_uppercase_words_3_chars.match(token):
