@@ -75,6 +75,12 @@ regex_single_comma = re.compile(r"^,/[^\s/]+$")
 # Multi-character punctuation
 regex_mc_punctuation = re.compile(r'^[!"#$%&()*+,\-./:;<=>?@\[\\\]^_{|}~]{2,}/[^\s/]+$')
 
+# Common nouns
+regex_noun_common = re.compile(r'^\S+/NNS?$')
+
+# Proper nouns
+regex_noun_proper = re.compile(r'^\S+/NN(?:PS|P)?$')
+
 # Multi-character punctuation, without PoS tags
 regex_mc_punctuation_no_tag = re.compile(r'^[!"#$%&()*+,\-./:;<=>?@\[\\\]^_{|}~]+$')
 
@@ -111,7 +117,7 @@ def extract_features(comment):
     tokens = regex_tokenizer.split(comment)
 
     for idx, token in enumerate(tokens):
-        if not token:
+        if not token or token == "\n":
             continue
 
         token = token.strip()
@@ -127,6 +133,16 @@ def extract_features(comment):
         match_mc_punctuation = regex_mc_punctuation.match(token)
         if match_mc_punctuation:
             features[7] += 1
+
+        # Feature 9: Number of common nouns
+        match_noun_common = regex_noun_common.match(token)
+        if match_noun_common:
+            features[8] += 1
+
+        # Feature 10: Number of proper nouns
+        match_noun_proper = regex_noun_proper.match(token)
+        if match_noun_proper:
+            features[9] += 1
 
     return features, num_tokens, num_sentences, sum_tokens_length
 
@@ -171,7 +187,7 @@ def extract1(comment):
     # This shouldn't be necessary, but for sanity...
     comment = comment.strip()
 
-    features = extract_features(comment)
+    features, num_tokens, num_sentences, sum_tokens_length = extract_features(comment)
 
     return features
 
