@@ -1,10 +1,9 @@
-import numpy as np
-import sys
 import argparse
-import os
+import functools
 import json
 import re
-import functools
+
+import numpy as np
 
 prefix_wordlist = ''
 wordlists_dir = prefix_wordlist + 'Wordlists/'
@@ -64,7 +63,6 @@ regex_cc = re.compile(r"^[^\s/]+/CC$")
 regex_ptv = re.compile(r"^[^\s/]+/VBD$")
 
 # Future tense verbs
-# TODO
 regex_ftv = re.compile(r"(?:\s+|^)(?:will|'ll)/[^\s/]+(?:\s+|$)", re.IGNORECASE)
 regex_gonna_vb = re.compile(r"(?:\s+|^)gonna/[^\s/]+\s+\S+/VB[DGNPZ]?(?:\s+|$)", re.IGNORECASE)
 regex_going_to_vb = re.compile(r"(?:\s+|^)going/[^\s/]+\s+to/[^\s/]+\s+\S+/VB[DGNPZ]?(?:\s+|$)", re.IGNORECASE)
@@ -89,6 +87,15 @@ regex_pos = re.compile(r"(\S+)/[^\s/]+", re.IGNORECASE)
 
 regex_newline = re.compile(r"\n+")
 
+# Adverbs
+regex_adverbs = re.compile(r'^\S+/(?:RB[RS]?|RP)$')
+
+# wh-words
+regex_wh_words = re.compile(r'^\S+/(?:WP\$?|WRB|WDT)$')
+
+# Words in uppercase (3 or more letters long)
+regex_uppercase_words_3_chars = re.compile(r'^[A-Z]{3,}/[^\s/]+$')
+
 
 def extract_features(comment):
     features = np.zeros((173,))
@@ -108,6 +115,8 @@ def extract_features(comment):
         extract_features_1_through_5(features, token)
 
         extract_features_7_through_10(features, token)
+
+        extract_features_11_through_14(features, token)
 
     return features
 
@@ -147,6 +156,20 @@ def extract_feature_6(comment, features):
     features[5] += count
 
     return comment
+
+
+def extract_features_11_through_14(features, token):
+    # Feature 11: Number of adverbs
+    if regex_adverbs.match(token):
+        features[10] += 1
+
+    # Feature 12: Number of wh-words
+    if regex_wh_words.match(token):
+        features[11] += 1
+
+    # Feature 14: Number of words in uppercase (>= 3 letters long)
+    if regex_uppercase_words_3_chars.match(token):
+        features[13] += 1
 
 
 def extract_features_15_through_17(comment, features):
