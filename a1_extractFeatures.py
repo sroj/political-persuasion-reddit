@@ -107,27 +107,31 @@ def extract_features(comment):
 
         extract_features_1_through_5(features, token)
 
-        # Feature 7: Number of commas
-        match_single_comma = regex_single_comma.match(token)
-        if match_single_comma:
-            features[6] += 1
-
-        # Feature 8: Number of multi-character punctuation tokens
-        match_mc_punctuation = regex_mc_punctuation.match(token)
-        if match_mc_punctuation:
-            features[7] += 1
-
-        # Feature 9: Number of common nouns
-        match_noun_common = regex_noun_common.match(token)
-        if match_noun_common:
-            features[8] += 1
-
-        # Feature 10: Number of proper nouns
-        match_noun_proper = regex_noun_proper.match(token)
-        if match_noun_proper:
-            features[9] += 1
+        extract_features_7_through_10(features, token)
 
     return features
+
+
+def extract_features_7_through_10(features, token):
+    # Feature 7: Number of commas
+    match_single_comma = regex_single_comma.match(token)
+    if match_single_comma:
+        features[6] += 1
+
+    # Feature 8: Number of multi-character punctuation tokens
+    match_mc_punctuation = regex_mc_punctuation.match(token)
+    if match_mc_punctuation:
+        features[7] += 1
+
+    # Feature 9: Number of common nouns
+    match_noun_common = regex_noun_common.match(token)
+    if match_noun_common:
+        features[8] += 1
+
+    # Feature 10: Number of proper nouns
+    match_noun_proper = regex_noun_proper.match(token)
+    if match_noun_proper:
+        features[9] += 1
 
 
 def extract_feature_6(comment, features):
@@ -141,6 +145,7 @@ def extract_feature_6(comment, features):
 
     comment, count = regex_going_to_vb.subn(" ", comment)
     features[5] += count
+
     return comment
 
 
