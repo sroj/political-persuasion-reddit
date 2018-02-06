@@ -18,20 +18,25 @@ regex_tokenizer = re.compile(r"[^\S\n]*(\n)+[^\S\n]*|[^\S\n]+")
 
 def read_bgl_norms():
     with open(filename_norm_bristol_gilhooly_logie, newline='') as csv_file:
-        csv_dict = csv.DictReader(csv_file, restkey="rest")
+        csv_file = csv.reader(csv_file)
 
         bgl_norm_dict = dict()
 
-        for row in csv_dict:
-            word = row['WORD']
+        for idx, row in enumerate(csv_file):
+
+            if idx == 0:
+                # Skipping the header
+                continue
+
+            word = row[1]
 
             if not word:
                 logging.warning("the word field was missing, skipping...")
                 continue
-                
-            aoa = int(row['AoA (100-700)'])
-            img = int(row['IMG'])
-            fam = int(row['FAM'])
+
+            aoa = int(row[3])
+            img = int(row[4])
+            fam = int(row[5])
             bgl_norm_dict[word] = [aoa, img, fam]
 
     return bgl_norm_dict
