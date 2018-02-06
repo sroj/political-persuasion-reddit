@@ -2,8 +2,8 @@ import argparse
 import csv
 import functools
 import json
-import re
 import logging
+import re
 
 import numpy as np
 
@@ -20,7 +20,7 @@ def read_bgl_norms():
     with open(filename_norm_bristol_gilhooly_logie, newline='') as csv_file:
         csv_file = csv.reader(csv_file)
 
-        bgl_norm_dict = dict()
+        norm_dict = dict()
 
         for idx, row in enumerate(csv_file):
 
@@ -34,15 +34,36 @@ def read_bgl_norms():
                 logging.warning("the word field was missing, skipping...")
                 continue
 
-            aoa = int(row[3])
-            img = int(row[4])
-            fam = int(row[5])
-            bgl_norm_dict[word] = [aoa, img, fam]
+            norm_dict[word] = [int(row[3]), int(row[4]), int(row[5])]
 
-    return bgl_norm_dict
+    return norm_dict
+
+
+def read_warringer_norms():
+    with open(filename_norm_warringer, newline='') as csv_file:
+        csv_file = csv.reader(csv_file)
+
+        norm_dict = dict()
+
+        for idx, row in enumerate(csv_file):
+
+            if idx == 0:
+                # Skipping the header
+                continue
+
+            word = row[1]
+
+            if not word:
+                logging.warning("the word field was missing, skipping...")
+                continue
+
+            norm_dict[word] = [float(row[2]), float(row[5]), float(row[8])]
+
+    return norm_dict
 
 
 bgl_norms = read_bgl_norms()
+warringer_norms = read_warringer_norms()
 
 
 def read_files_by_line(directory, files):
