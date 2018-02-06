@@ -114,6 +114,11 @@ ids_right = read_receptiviti_id_file('Right_IDs.txt')
 ids_left = read_receptiviti_id_file('Left_IDs.txt')
 ids_alt = read_receptiviti_id_file('Alt_IDs.txt')
 
+receptiviti_feat_center = np.load(feats_dir + 'Center_feats.dat.npy')
+receptiviti_feat_right = np.load(feats_dir + 'Right_feats.dat.npy')
+receptiviti_feat_left = np.load(feats_dir + 'Left_feats.dat.npy')
+receptiviti_feat_alt = np.load(feats_dir + 'Alt_feats.dat.npy')
+
 # First person pronouns
 fpp_alternation = "|".join(first_person_pronouns)
 fpp_group = r"(?:{})".format(fpp_alternation)
