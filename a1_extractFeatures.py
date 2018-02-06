@@ -272,6 +272,9 @@ def extract_features_18_through_29(tokens, features):
     warringer_d = []
 
     for token in tokens:
+        if not token:
+            continue
+
         bgl_data = bgl_norms.get(token.lower())
 
         if bgl_data:
