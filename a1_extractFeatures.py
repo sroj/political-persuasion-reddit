@@ -10,6 +10,9 @@ import numpy as np
 prefix_wordlist = ''
 wordlists_dir = prefix_wordlist + 'Wordlists/'
 
+prefix_feats = ''
+feats_dir = 'feats/'
+
 filename_norm_bristol_gilhooly_logie = wordlists_dir + "BristolNorms+GilhoolyLogie.csv"
 filename_norm_warringer = wordlists_dir + "Ratings_Warriner_et_al.csv"
 
@@ -97,10 +100,19 @@ def read_slang_acronyms():
     return set(read_files_by_line(wordlists_dir, files))
 
 
+def read_receptiviti_id_file(filename):
+    return read_files_by_line(feats_dir, [filename])
+
+
 first_person_pronouns = read_first_person_pronouns()
 second_person_pronouns = read_second_person_pronouns()
 third_person_pronouns = read_third_person_pronouns()
 slang_acronyms = set(filter(None, read_slang_acronyms()))
+
+ids_center = read_receptiviti_id_file('Center_IDs.txt')
+ids_right = read_receptiviti_id_file('Right_IDs.txt')
+ids_left = read_receptiviti_id_file('Left_IDs.txt')
+ids_alt = read_receptiviti_id_file('Alt_IDs.txt')
 
 # First person pronouns
 fpp_alternation = "|".join(first_person_pronouns)
@@ -162,10 +174,16 @@ slang_acronyms_alternation = "(?:" + "|".join(slang_acronyms) + ")"
 regex_slang_acronyms = re.compile(r'^{}/[^\s/]+$'.format(slang_acronyms_alternation), re.IGNORECASE)
 
 
+def extract_features_30_through_173(comment, features):
+    pass
+
+
 def extract_features(comment):
     features = np.zeros((173,))
 
     extract_features_15_through_29(comment, features)
+
+    extract_features_30_through_173(comment, features)
 
     comment = extract_feature_6(comment, features)
 
