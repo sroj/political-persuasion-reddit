@@ -165,7 +165,7 @@ regex_slang_acronyms = re.compile(r'^{}/[^\s/]+$'.format(slang_acronyms_alternat
 def extract_features(comment):
     features = np.zeros((173,))
 
-    extract_features_15_through_17(comment, features)
+    extract_features_15_through_29(comment, features)
 
     comment = extract_feature_6(comment, features)
 
@@ -241,7 +241,7 @@ def extract_features_11_through_14(features, token):
         features[13] += 1
 
 
-def extract_features_15_through_17(comment, features):
+def extract_features_15_through_29(comment, features):
     # Feature 17: Number of sentences
     no_tag_comment = regex_pos.sub(r"\1", comment).strip()
     num_sentences = len(regex_newline.split(no_tag_comment))
@@ -257,6 +257,54 @@ def extract_features_15_through_17(comment, features):
     tokens_exc_multicharacter_punct = filter(lambda x: not regex_mc_punctuation_no_tag.match(x), tokens)
     sum_tokens_length = functools.reduce(lambda acc, x: acc + len(x), tokens_exc_multicharacter_punct, 0)
     features[15] = sum_tokens_length / num_tokens
+
+    # Features 18 - 29
+    bgl_aoa = []
+    bgl_img = []
+    bgl_fam = []
+
+    warringer_v = []
+    warringer_a = []
+    warringer_d = []
+
+    for token in tokens:
+        bgl_data = bgl_norms.get(token.lower())
+
+        if bgl_data:
+            bgl_aoa.append(bgl_data[0])
+            bgl_img.append(bgl_data[1])
+            bgl_fam.append(bgl_data[2])
+
+        warringer_data = warringer_norms.get(token.lower())
+
+        if warringer_data:
+            warringer_v.append(warringer_data[0])
+            warringer_a.append(warringer_data[1])
+            warringer_d.append(warringer_data[2])
+
+    if bgl_aoa:
+        features[17] = np.mean(bgl_aoa)
+        features[20] = np.std(bgl_aoa)
+
+    if bgl_img:
+        features[18] = np.mean(bgl_img)
+        features[21] = np.std(bgl_img)
+
+    if bgl_fam:
+        features[19] = np.mean(bgl_fam)
+        features[22] = np.std(bgl_fam)
+
+    if warringer_v:
+        features[23] = np.mean(warringer_v)
+        features[26] = np.std(warringer_v)
+
+    if warringer_a:
+        features[24] = np.mean(warringer_a)
+        features[27] = np.std(warringer_a)
+
+    if warringer_d:
+        features[25] = np.mean(warringer_d)
+        features[28] = np.std(warringer_d)
 
 
 def extract_features_1_through_5(features, token):
