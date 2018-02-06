@@ -1,14 +1,43 @@
 import argparse
+import csv
 import functools
 import json
 import re
+import logging
 
 import numpy as np
 
 prefix_wordlist = ''
 wordlists_dir = prefix_wordlist + 'Wordlists/'
 
+filename_norm_bristol_gilhooly_logie = wordlists_dir + "BristolNorms+GilhoolyLogie.csv"
+filename_norm_warringer = wordlists_dir + "Ratings_Warriner_et_al.csv"
+
 regex_tokenizer = re.compile(r"[^\S\n]*(\n)+[^\S\n]*|[^\S\n]+")
+
+
+def read_bgl_norms():
+    with open(filename_norm_bristol_gilhooly_logie, newline='') as csv_file:
+        csv_dict = csv.DictReader(csv_file, restkey="rest")
+
+        bgl_norm_dict = dict()
+
+        for row in csv_dict:
+            word = row['WORD']
+
+            if not word:
+                logging.warning("the word field was missing, skipping...")
+                continue
+                
+            aoa = int(row['AoA (100-700)'])
+            img = int(row['IMG'])
+            fam = int(row['FAM'])
+            bgl_norm_dict[word] = [aoa, img, fam]
+
+    return bgl_norm_dict
+
+
+bgl_norms = read_bgl_norms()
 
 
 def read_files_by_line(directory, files):
@@ -244,7 +273,11 @@ def extract1(comment):
     # This shouldn't be necessary, but for sanity...
     comment = comment.strip()
 
-    features, num_tokens, num_sentences, sum_tokens_length = extract_features(comment)
+    if not comment:
+        logging.warning("Ignoring empty comment...")
+        return np.zeros((173,))
+
+    features = extract_features(comment)
 
     return features
 
