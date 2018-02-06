@@ -258,6 +258,10 @@ def extract_features_15_through_29(comment, features):
     sum_tokens_length = functools.reduce(lambda acc, x: acc + len(x), tokens_exc_multicharacter_punct, 0)
     features[15] = sum_tokens_length / num_tokens
 
+    extract_features_18_through_29(tokens, features)
+
+
+def extract_features_18_through_29(tokens, features):
     # Features 18 - 29
     bgl_aoa = []
     bgl_img = []
