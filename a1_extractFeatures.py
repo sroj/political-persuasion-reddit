@@ -390,7 +390,7 @@ def extract1(comment):
     comment = comment.strip()
 
     if not comment:
-        logging.warning("Ignoring empty comment...")
+        # logging.warning("Ignoring empty comment...")
         return np.zeros((173,))
 
     features = extract_features(comment)
