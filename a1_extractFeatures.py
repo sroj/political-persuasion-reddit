@@ -114,6 +114,11 @@ ids_right = read_receptiviti_id_file('Right_IDs.txt')
 ids_left = read_receptiviti_id_file('Left_IDs.txt')
 ids_alt = read_receptiviti_id_file('Alt_IDs.txt')
 
+ids_center_dict = {comment_id: idx for idx, comment_id in enumerate(ids_center)}
+ids_right_dict = {comment_id: idx for idx, comment_id in enumerate(ids_right)}
+ids_left_dict = {comment_id: idx for idx, comment_id in enumerate(ids_left)}
+ids_alt_dict = {comment_id: idx for idx, comment_id in enumerate(ids_alt)}
+
 receptiviti_feat_center = np.load(feats_dir + 'Center_feats.dat.npy')
 receptiviti_feat_right = np.load(feats_dir + 'Right_feats.dat.npy')
 receptiviti_feat_left = np.load(feats_dir + 'Left_feats.dat.npy')
@@ -180,7 +185,16 @@ regex_slang_acronyms = re.compile(r'^{}/[^\s/]+$'.format(slang_acronyms_alternat
 
 
 def extract_features_30_through_173(comment_id, cat, features):
-    pass
+    if cat == "Center":
+        features[29:] = receptiviti_feat_center[ids_center_dict[comment_id]]
+    elif cat == "Right":
+        features[29:] = receptiviti_feat_right[ids_right_dict[comment_id]]
+    elif cat == "Left":
+        features[29:] = receptiviti_feat_left[ids_left_dict[comment_id]]
+    elif cat == "Alt":
+        features[29:] = receptiviti_feat_alt[ids_alt_dict[comment_id]]
+    else:
+        logging.warning("Unrecognized category: {}".format(cat))
 
 
 def extract_features(comment):
