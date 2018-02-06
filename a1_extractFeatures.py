@@ -179,7 +179,7 @@ slang_acronyms_alternation = "(?:" + "|".join(slang_acronyms) + ")"
 regex_slang_acronyms = re.compile(r'^{}/[^\s/]+$'.format(slang_acronyms_alternation), re.IGNORECASE)
 
 
-def extract_features_30_through_173(comment, features):
+def extract_features_30_through_173(comment_id, cat, features):
     pass
 
 
@@ -187,8 +187,6 @@ def extract_features(comment):
     features = np.zeros((173,))
 
     extract_features_15_through_29(comment, features)
-
-    extract_features_30_through_173(comment, features)
 
     comment = extract_feature_6(comment, features)
 
@@ -406,6 +404,10 @@ def main(args):
         cat = datum['cat']
         encoded_cat = encode_label(cat)
         features = extract1(body)
+
+        comment_id = datum['id']
+        extract_features_30_through_173(comment_id, cat, features)
+
         features = np.append(features, [encoded_cat], axis=0)
         feats[i] = features
 
