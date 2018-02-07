@@ -87,8 +87,9 @@ def classify_and_report(classifier, x_test, x_train, y_test, y_train):
     classifier.fit(x_train, y_train)
     y_pred_svc_linear = classifier.predict(x_test)
     cm = confusion_matrix(y_test, y_pred_svc_linear)
-    acc_svc_linear = accuracy(cm)
-    print("Accuracy: {}".format(acc_svc_linear))
+    acc = accuracy(cm)
+    print("Accuracy: {}".format(acc))
+    return acc
 
 
 def class32(X_train, X_test, y_train, y_test, iBest):
