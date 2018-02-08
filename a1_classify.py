@@ -71,6 +71,8 @@ def class31(filename):
        i: int, the index of the supposed best classifier
     '''
 
+    print("\nStarting question 3.1")
+
     file_data = np.load(filename)
     data = file_data['arr_0']
 
@@ -169,6 +171,8 @@ def class32(X_train, X_test, y_train, y_test, iBest):
        X_1k: numPy array, just 1K rows of X_train
        y_1k: numPy array, just 1K rows of y_train
    '''
+
+    print("\nStarting question 3.2")
 
     classifier_1k, classifier_5k, classifier_10k, classifier_15k, classifier_20k = build_classifiers(iBest)
 
@@ -321,7 +325,7 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
        X_1k: numPy array, just 1K rows of X_train (from task 3.2)
        y_1k: numPy array, just 1K rows of y_train (from task 3.2)
     '''
-    print('TODO Section 3.3')
+    print("\nStarting question 3.3")
 
 
 def class34(filename, i):
