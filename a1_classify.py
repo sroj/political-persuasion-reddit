@@ -35,7 +35,7 @@ def precision(C):
     return [C[i, i] / np.sum(C[:, i]) for i in range(C.shape[0])]
 
 
-def save_csv_file(accuracies, confusion_matrices, precisions, recalls):
+def save_csv_file_3_1(accuracies, confusion_matrices, precisions, recalls):
     if not (len(accuracies) == len(confusion_matrices) == len(precisions) == len(recalls)):
         print("Error: data dimensions don't match")
         return
@@ -123,7 +123,7 @@ def class31(filename):
     classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
                         recalls)
 
-    save_csv_file(accuracies, confusion_matrices, precisions, recalls)
+    save_csv_file_3_1(accuracies, confusion_matrices, precisions, recalls)
 
     iBest = np.argmax(accuracies) + 1
 
@@ -171,6 +171,7 @@ def class32(X_train, X_test, y_train, y_test, iBest):
             tol=1e-4
 
         )
+
     elif iBest == 2:
         classifier = sklearn.svm.SVC(kernel='rbf', gamma=2, random_state=42)
     elif iBest == 3:
