@@ -6,6 +6,7 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 import numpy as np
 import argparse
+import csv
 import sys
 import os
 
@@ -32,6 +33,19 @@ def precision(C):
     return [C[i, i] / np.sum(C[:, i]) for i in range(C.shape[0])]
 
 
+def save_csv_file(accuracies, confusion_matrices, precisions, recalls):
+    if not (len(accuracies) == len(confusion_matrices) == len(precisions) == len(recalls)):
+        print("Error: data dimensions don't match")
+        return
+
+    with open('a1_3.1.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        for i in range(len(accuracies)):
+            cm = confusion_matrices[i]
+            row = [i + 1, accuracies[i], *recalls[i], *precisions[i], *(cm.flatten().tolist())]
+            writer.writerow(row)
+
+
 def class31(filename):
     ''' This function performs experiment 3.1
     
@@ -54,42 +68,77 @@ def class31(filename):
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=42, shuffle=True)
 
+    accuracies = []
+    confusion_matrices = []
+    precisions = []
+    recalls = []
+
     # Start running experiments
     # Linear SVC
     print("Running linear SVC")
     classifier = sklearn.svm.LinearSVC(random_state=42)
-    classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    print("Accuracy: {}".format(acc))
+    accuracies.append(acc)
+    confusion_matrices.append(confusion_mat)
+    precisions.append(prec)
+    recalls.append(rec)
 
     # Running rbf SVC
     print("Running rbf SVC")
     classifier = sklearn.svm.SVC(kernel='rbf', gamma=2, random_state=42)
-    classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    print("Accuracy: {}".format(acc))
+    accuracies.append(acc)
+    confusion_matrices.append(confusion_mat)
+    precisions.append(prec)
+    recalls.append(rec)
 
     # Random Forest Classifier
     print("Running Random Forest classifier")
     classifier = sklearn.ensemble.RandomForestClassifier(max_depth=5, n_estimators=10, random_state=42)
-    classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    print("Accuracy: {}".format(acc))
+    accuracies.append(acc)
+    confusion_matrices.append(confusion_mat)
+    precisions.append(prec)
+    recalls.append(rec)
 
     # MLP
     print("Running MLP classifier")
     classifier = sklearn.neural_network.MLPClassifier(alpha=0.05, random_state=42)
-    classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    print("Accuracy: {}".format(acc))
+    accuracies.append(acc)
+    confusion_matrices.append(confusion_mat)
+    precisions.append(prec)
+    recalls.append(rec)
 
     # Ada Boost
     print("Running Ada Boost classifier")
     classifier = sklearn.ensemble.AdaBoostClassifier(random_state=42)
-    classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
+    print("Accuracy: {}".format(acc))
+    accuracies.append(acc)
+    confusion_matrices.append(confusion_mat)
+    precisions.append(prec)
+    recalls.append(rec)
 
-    # return x_train, x_test, y_train, y_test, iBest
+    save_csv_file(accuracies, confusion_matrices, precisions, recalls)
+
+    iBest = np.argmax(accuracies) + 1
+
+    return x_train, x_test, y_train, y_test, iBest
 
 
 def classify_and_report(classifier, x_test, x_train, y_test, y_train):
     classifier.fit(x_train, y_train)
-    y_pred_svc_linear = classifier.predict(x_test)
-    cm = confusion_matrix(y_test, y_pred_svc_linear)
-    acc = accuracy(cm)
-    print("Accuracy: {}".format(acc))
-    return acc
+    y_pred = classifier.predict(x_test)
+    confusion_mat = confusion_matrix(y_test, y_pred)
+    acc = accuracy(confusion_mat)
+    prec = precision(confusion_mat)
+    rec = recall(confusion_mat)
+    return acc, confusion_mat, prec, rec
 
 
 def class32(X_train, X_test, y_train, y_test, iBest):
@@ -143,4 +192,6 @@ if __name__ == "__main__":
 
     filename = args.input
 
-    class31(filename)
+    x_train, x_test, y_train, y_test, iBest = class31(filename)
+
+    print("Best classifier from question 3.1 is {}".format(iBest))
