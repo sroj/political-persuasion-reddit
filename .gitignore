@@ -52,3 +52,4 @@ fabric.properties
 *.json
 
 *.npz
+*.csv
