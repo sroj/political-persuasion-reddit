@@ -171,15 +171,40 @@ def class32(X_train, X_test, y_train, y_test, iBest):
    '''
 
     if iBest == 1:
-        classifier = build_linear_svc_classifier()
+        print("Question 3.2: running with Linear SVC")
+        classifier_1k = build_linear_svc_classifier()
+        classifier_5k = build_linear_svc_classifier()
+        classifier_10k = build_linear_svc_classifier()
+        classifier_15k = build_linear_svc_classifier()
+        classifier_20k = build_linear_svc_classifier()
     elif iBest == 2:
-        classifier = build_svc_rbf_classifier()
+        print("Question 3.2: running with SVC with rbf")
+        classifier_1k = build_svc_rbf_classifier()
+        classifier_5k = build_svc_rbf_classifier()
+        classifier_10k = build_svc_rbf_classifier()
+        classifier_15k = build_svc_rbf_classifier()
+        classifier_20k = build_svc_rbf_classifier()
     elif iBest == 3:
-        classifier = build_random_forest_classifier()
+        print("Question 3.2: running with Random Forests")
+        classifier_1k = build_random_forest_classifier()
+        classifier_5k = build_random_forest_classifier()
+        classifier_10k = build_random_forest_classifier()
+        classifier_15k = build_random_forest_classifier()
+        classifier_20k = build_random_forest_classifier()
     elif iBest == 4:
-        classifier = build_mlp_classifier()
+        print("Question 3.2: running with MLP")
+        classifier_1k = build_mlp_classifier()
+        classifier_5k = build_mlp_classifier()
+        classifier_10k = build_mlp_classifier()
+        classifier_15k = build_mlp_classifier()
+        classifier_20k = build_mlp_classifier()
     elif iBest == 5:
-        classifier = build_ada_boost_classifier()
+        print("Question 3.2: running with AdaBoost")
+        classifier_1k = build_ada_boost_classifier()
+        classifier_5k = build_ada_boost_classifier()
+        classifier_10k = build_ada_boost_classifier()
+        classifier_15k = build_ada_boost_classifier()
+        classifier_20k = build_ada_boost_classifier()
     else:
         print("ERROR: Unrecognized best classifier: {}".format(iBest))
         return
@@ -189,18 +214,39 @@ def class32(X_train, X_test, y_train, y_test, iBest):
 
     _1k_range = np.arange(0, 1000)
     X_1k, y_1k = X_train[_1k_range], y_train[_1k_range]
+    classifier_1k.fit(X_1k, y_1k)
 
     _5k_range = np.arange(0, 5000)
     X_5k, y_5k = X_train[_5k_range], y_train[_5k_range]
+    classifier_5k.fit(X_5k, y_5k)
 
     _10k_range = np.arange(0, 10000)
     X_10k, y_10k = X_train[_10k_range], y_train[_10k_range]
+    classifier_10k.fit(X_10k, y_10k)
 
     _15k_range = np.arange(0, 15000)
     X_15k, y_15k = X_train[_15k_range], y_train[_15k_range]
+    classifier_15k.fit(X_15k, y_15k)
 
     _20k_range = np.arange(0, 20000)
     X_20k, y_20k = X_train[_20k_range], y_train[_20k_range]
+    classifier_20k.fit(X_20k, y_20k)
+
+    y_1k_pred = classifier_1k.predict(X_test)
+    y_5k_pred = classifier_5k.predict(X_test)
+    y_10k_pred = classifier_10k.predict(X_test)
+    y_15k_pred = classifier_15k.predict(X_test)
+    y_20k_pred = classifier_20k.predict(X_test)
+
+    accuracies = [
+        accuracy(confusion_matrix(y_test, y_1k_pred)),
+        accuracy(confusion_matrix(y_test, y_5k_pred)),
+        accuracy(confusion_matrix(y_test, y_10k_pred)),
+        accuracy(confusion_matrix(y_test, y_15k_pred)),
+        accuracy(confusion_matrix(y_test, y_20k_pred)),
+    ]
+
+    save_csv_file('a1_3.2.csv', [accuracies])
 
     return X_1k, y_1k
 
