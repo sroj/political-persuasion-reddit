@@ -40,11 +40,20 @@ def save_csv_file_3_1(accuracies, confusion_matrices, precisions, recalls):
         print("Error: data dimensions don't match")
         return
 
-    with open('a1_3.1.csv', 'w', newline='') as csvfile:
+    rows = []
+
+    for i in range(len(accuracies)):
+        cm = confusion_matrices[i]
+        row = [i + 1, accuracies[i], *recalls[i], *precisions[i], *(cm.flatten().tolist())]
+        rows.append(row)
+
+    save_csv_file('a1_3.1.csv', rows)
+
+
+def save_csv_file(filename, data_matrix):
+    with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        for i in range(len(accuracies)):
-            cm = confusion_matrices[i]
-            row = [i + 1, accuracies[i], *recalls[i], *precisions[i], *(cm.flatten().tolist())]
+        for row in data_matrix:
             writer.writerow(row)
 
 
