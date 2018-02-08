@@ -170,43 +170,7 @@ def class32(X_train, X_test, y_train, y_test, iBest):
        y_1k: numPy array, just 1K rows of y_train
    '''
 
-    if iBest == 1:
-        print("Question 3.2: running with Linear SVC")
-        classifier_1k = build_linear_svc_classifier()
-        classifier_5k = build_linear_svc_classifier()
-        classifier_10k = build_linear_svc_classifier()
-        classifier_15k = build_linear_svc_classifier()
-        classifier_20k = build_linear_svc_classifier()
-    elif iBest == 2:
-        print("Question 3.2: running with SVC with rbf")
-        classifier_1k = build_svc_rbf_classifier()
-        classifier_5k = build_svc_rbf_classifier()
-        classifier_10k = build_svc_rbf_classifier()
-        classifier_15k = build_svc_rbf_classifier()
-        classifier_20k = build_svc_rbf_classifier()
-    elif iBest == 3:
-        print("Question 3.2: running with Random Forests")
-        classifier_1k = build_random_forest_classifier()
-        classifier_5k = build_random_forest_classifier()
-        classifier_10k = build_random_forest_classifier()
-        classifier_15k = build_random_forest_classifier()
-        classifier_20k = build_random_forest_classifier()
-    elif iBest == 4:
-        print("Question 3.2: running with MLP")
-        classifier_1k = build_mlp_classifier()
-        classifier_5k = build_mlp_classifier()
-        classifier_10k = build_mlp_classifier()
-        classifier_15k = build_mlp_classifier()
-        classifier_20k = build_mlp_classifier()
-    elif iBest == 5:
-        print("Question 3.2: running with AdaBoost")
-        classifier_1k = build_ada_boost_classifier()
-        classifier_5k = build_ada_boost_classifier()
-        classifier_10k = build_ada_boost_classifier()
-        classifier_15k = build_ada_boost_classifier()
-        classifier_20k = build_ada_boost_classifier()
-    else:
-        raise RuntimeError("ERROR: Unrecognized best classifier: {}".format(iBest))
+    classifier_1k, classifier_5k, classifier_10k, classifier_15k, classifier_20k = build_classifiers(iBest)
 
     # Step 3.1 already does shuffling, but just for sanity...
     X_train, y_train = sklearn.utils.shuffle(X_train, y_train, random_state=42)
@@ -248,6 +212,48 @@ def class32(X_train, X_test, y_train, y_test, iBest):
     save_csv_file('a1_3.2.csv', [accuracies])
 
     return X_1k, y_1k
+
+
+def build_classifiers(iBest):
+    if iBest == 1:
+        print("Question 3.2: running with Linear SVC")
+        classifier_1k = build_linear_svc_classifier()
+        classifier_5k = build_linear_svc_classifier()
+        classifier_10k = build_linear_svc_classifier()
+        classifier_15k = build_linear_svc_classifier()
+        classifier_20k = build_linear_svc_classifier()
+    elif iBest == 2:
+        print("Question 3.2: running with SVC with rbf")
+        classifier_1k = build_svc_rbf_classifier()
+        classifier_5k = build_svc_rbf_classifier()
+        classifier_10k = build_svc_rbf_classifier()
+        classifier_15k = build_svc_rbf_classifier()
+        classifier_20k = build_svc_rbf_classifier()
+    elif iBest == 3:
+        print("Question 3.2: running with Random Forests")
+        classifier_1k = build_random_forest_classifier()
+        classifier_5k = build_random_forest_classifier()
+        classifier_10k = build_random_forest_classifier()
+        classifier_15k = build_random_forest_classifier()
+        classifier_20k = build_random_forest_classifier()
+    elif iBest == 4:
+        print("Question 3.2: running with MLP")
+        classifier_1k = build_mlp_classifier()
+        classifier_5k = build_mlp_classifier()
+        classifier_10k = build_mlp_classifier()
+        classifier_15k = build_mlp_classifier()
+        classifier_20k = build_mlp_classifier()
+    elif iBest == 5:
+        print("Question 3.2: running with AdaBoost")
+        classifier_1k = build_ada_boost_classifier()
+        classifier_5k = build_ada_boost_classifier()
+        classifier_10k = build_ada_boost_classifier()
+        classifier_15k = build_ada_boost_classifier()
+        classifier_20k = build_ada_boost_classifier()
+    else:
+        raise RuntimeError("ERROR: Unrecognized best classifier: {}".format(iBest))
+
+    return classifier_1k, classifier_5k, classifier_10k, classifier_15k, classifier_20k
 
 
 def build_svc_rbf_classifier():
