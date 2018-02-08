@@ -294,10 +294,9 @@ def apply_lemmatization(modComm):
     try:
         validate_input(modComm)
         tokens_with_tag = split_by_tag(modComm)
+
         # Remove POS tags from previous step
         modComm_notags = remove_pos_tags(modComm)
-
-        # tokens = nlp(modComm_notags)
 
         tokens = spacy.tokens.Doc(nlp.vocab, words=modComm_notags)
         tokens = nlp.tagger(tokens)
