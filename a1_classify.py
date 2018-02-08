@@ -76,7 +76,15 @@ def class31(filename):
     # Start running experiments
     # Linear SVC
     print("Running linear SVC")
-    classifier = sklearn.svm.LinearSVC(random_state=42)
+    classifier = sklearn.svm.LinearSVC(
+        random_state=42,
+        max_iter=1000,
+        dual=False,
+        C=1.2,
+        penalty='l1',
+        tol=1e-4
+
+    )
     acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
     print("Accuracy: {}".format(acc))
     accuracies.append(acc)
@@ -106,7 +114,16 @@ def class31(filename):
 
     # MLP
     print("Running MLP classifier")
-    classifier = sklearn.neural_network.MLPClassifier(alpha=0.05, random_state=42)
+    classifier = sklearn.neural_network.MLPClassifier(
+        alpha=0.05,
+        random_state=42,
+        activation='logistic',
+        max_iter=1000,
+        hidden_layer_sizes=(100,),
+        learning_rate='adaptive',
+        momentum=0.9,
+        learning_rate_init=0.001
+    )
     acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
     print("Accuracy: {}".format(acc))
     accuracies.append(acc)
