@@ -85,32 +85,20 @@ def class31(filename):
         tol=1e-4
 
     )
-    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
-    print("Accuracy: {}".format(acc))
-    accuracies.append(acc)
-    confusion_matrices.append(confusion_mat)
-    precisions.append(prec)
-    recalls.append(rec)
+    classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
+                        recalls)
 
     # Running rbf SVC
     print("Running rbf SVC")
     classifier = sklearn.svm.SVC(kernel='rbf', gamma=2, random_state=42)
-    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
-    print("Accuracy: {}".format(acc))
-    accuracies.append(acc)
-    confusion_matrices.append(confusion_mat)
-    precisions.append(prec)
-    recalls.append(rec)
+    classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
+                        recalls)
 
     # Random Forest Classifier
     print("Running Random Forest classifier")
     classifier = sklearn.ensemble.RandomForestClassifier(max_depth=5, n_estimators=10, random_state=42)
-    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
-    print("Accuracy: {}".format(acc))
-    accuracies.append(acc)
-    confusion_matrices.append(confusion_mat)
-    precisions.append(prec)
-    recalls.append(rec)
+    classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
+                        recalls)
 
     # MLP
     print("Running MLP classifier")
@@ -124,22 +112,14 @@ def class31(filename):
         momentum=0.9,
         learning_rate_init=0.001
     )
-    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
-    print("Accuracy: {}".format(acc))
-    accuracies.append(acc)
-    confusion_matrices.append(confusion_mat)
-    precisions.append(prec)
-    recalls.append(rec)
+    classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
+                        recalls)
 
     # Ada Boost
     print("Running Ada Boost classifier")
     classifier = sklearn.ensemble.AdaBoostClassifier(random_state=42)
-    acc, confusion_mat, prec, rec = classify_and_report(classifier, x_test, x_train, y_test, y_train)
-    print("Accuracy: {}".format(acc))
-    accuracies.append(acc)
-    confusion_matrices.append(confusion_mat)
-    precisions.append(prec)
-    recalls.append(rec)
+    classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
+                        recalls)
 
     save_csv_file(accuracies, confusion_matrices, precisions, recalls)
 
@@ -148,14 +128,20 @@ def class31(filename):
     return x_train, x_test, y_train, y_test, iBest
 
 
-def classify_and_report(classifier, x_test, x_train, y_test, y_train):
+def classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
+                        recalls):
     classifier.fit(x_train, y_train)
     y_pred = classifier.predict(x_test)
     confusion_mat = confusion_matrix(y_test, y_pred)
     acc = accuracy(confusion_mat)
     prec = precision(confusion_mat)
     rec = recall(confusion_mat)
-    return acc, confusion_mat, prec, rec
+
+    print("Accuracy: {}".format(acc))
+    accuracies.append(acc)
+    confusion_matrices.append(confusion_mat)
+    precisions.append(prec)
+    recalls.append(rec)
 
 
 def class32(X_train, X_test, y_train, y_test, iBest):
