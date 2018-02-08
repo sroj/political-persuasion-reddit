@@ -171,33 +171,15 @@ def class32(X_train, X_test, y_train, y_test, iBest):
    '''
 
     if iBest == 1:
-        classifier = sklearn.svm.LinearSVC(
-            random_state=42,
-            max_iter=1000,
-            dual=False,
-            C=1.2,
-            penalty='l1',
-            tol=1e-4
-
-        )
-
+        classifier = build_linear_svc_classifier()
     elif iBest == 2:
-        classifier = sklearn.svm.SVC(kernel='rbf', gamma=2, random_state=42)
+        classifier = build_svc_rbf_classifier()
     elif iBest == 3:
-        classifier = sklearn.ensemble.RandomForestClassifier(max_depth=5, n_estimators=10, random_state=42)
+        classifier = build_random_forest_classifier()
     elif iBest == 4:
-        classifier = sklearn.neural_network.MLPClassifier(
-            alpha=0.05,
-            random_state=42,
-            activation='logistic',
-            max_iter=1000,
-            hidden_layer_sizes=(100,),
-            learning_rate='adaptive',
-            momentum=0.9,
-            learning_rate_init=0.001
-        )
+        classifier = build_mlp_classifier()
     elif iBest == 5:
-        classifier = sklearn.ensemble.AdaBoostClassifier(random_state=42)
+        classifier = build_ada_boost_classifier()
     else:
         print("ERROR: Unrecognized best classifier: {}".format(iBest))
         return
@@ -221,6 +203,43 @@ def class32(X_train, X_test, y_train, y_test, iBest):
     X_20k, y_20k = X_train[_20k_range], y_train[_20k_range]
 
     return X_1k, y_1k
+
+
+def build_svc_rbf_classifier():
+    return sklearn.svm.SVC(kernel='rbf', gamma=2, random_state=42)
+
+
+def build_random_forest_classifier():
+    return sklearn.ensemble.RandomForestClassifier(max_depth=5, n_estimators=10, random_state=42)
+
+
+def build_ada_boost_classifier():
+    return sklearn.ensemble.AdaBoostClassifier(random_state=42)
+
+
+def build_mlp_classifier():
+    return sklearn.neural_network.MLPClassifier(
+        alpha=0.05,
+        random_state=42,
+        activation='logistic',
+        max_iter=1000,
+        hidden_layer_sizes=(100,),
+        learning_rate='adaptive',
+        momentum=0.9,
+        learning_rate_init=0.001
+    )
+
+
+def build_linear_svc_classifier():
+    return sklearn.svm.LinearSVC(
+        random_state=42,
+        max_iter=1000,
+        dual=False,
+        C=1.2,
+        penalty='l1',
+        tol=1e-4
+
+    )
 
 
 def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
