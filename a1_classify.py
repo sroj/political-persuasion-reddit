@@ -175,6 +175,38 @@ def class32(X_train, X_test, y_train, y_test, iBest):
     # Step 3.1 already does shuffling, but just for sanity...
     X_train, y_train = sklearn.utils.shuffle(X_train, y_train, random_state=42)
 
+    X_1k, y_1k = fit_classifiers(
+        X_train,
+        y_train,
+        classifier_1k,
+        classifier_5k,
+        classifier_10k,
+        classifier_15k,
+        classifier_20k
+    )
+
+    y_1k_pred = classifier_1k.predict(X_test)
+    y_5k_pred = classifier_5k.predict(X_test)
+    y_10k_pred = classifier_10k.predict(X_test)
+    y_15k_pred = classifier_15k.predict(X_test)
+    y_20k_pred = classifier_20k.predict(X_test)
+
+    accuracies = [
+        accuracy(confusion_matrix(y_test, y_1k_pred)),
+        accuracy(confusion_matrix(y_test, y_5k_pred)),
+        accuracy(confusion_matrix(y_test, y_10k_pred)),
+        accuracy(confusion_matrix(y_test, y_15k_pred)),
+        accuracy(confusion_matrix(y_test, y_20k_pred)),
+    ]
+
+    file = 'a1_3.2.csv'
+    save_csv_file(file, [accuracies])
+    print("Accuracies for question 3.2 saved to {}".format(file))
+
+    return X_1k, y_1k
+
+
+def fit_classifiers(X_train, y_train, classifier_1k, classifier_5k, classifier_10k, classifier_15k, classifier_20k):
     _1k_range = np.arange(0, 1000)
     X_1k, y_1k = X_train[_1k_range], y_train[_1k_range]
     classifier_1k.fit(X_1k, y_1k)
@@ -194,24 +226,6 @@ def class32(X_train, X_test, y_train, y_test, iBest):
     _20k_range = np.arange(0, 20000)
     X_20k, y_20k = X_train[_20k_range], y_train[_20k_range]
     classifier_20k.fit(X_20k, y_20k)
-
-    y_1k_pred = classifier_1k.predict(X_test)
-    y_5k_pred = classifier_5k.predict(X_test)
-    y_10k_pred = classifier_10k.predict(X_test)
-    y_15k_pred = classifier_15k.predict(X_test)
-    y_20k_pred = classifier_20k.predict(X_test)
-
-    accuracies = [
-        accuracy(confusion_matrix(y_test, y_1k_pred)),
-        accuracy(confusion_matrix(y_test, y_5k_pred)),
-        accuracy(confusion_matrix(y_test, y_10k_pred)),
-        accuracy(confusion_matrix(y_test, y_15k_pred)),
-        accuracy(confusion_matrix(y_test, y_20k_pred)),
-    ]
-
-    file = 'a1_3.2.csv'
-    save_csv_file(file, [accuracies])
-    print("Accuracies for question 3.2 saved to {}".format(file))
 
     return X_1k, y_1k
 
@@ -331,4 +345,6 @@ if __name__ == "__main__":
 
     print("Best classifier from question 3.1 is {}".format(iBest))
 
-    class32(X_train, X_test, y_train, y_test, iBest)
+    X_1k, y_1k = class32(X_train, X_test, y_train, y_test, iBest)
+
+    class33(X_train, X_test, y_train, y_test, iBest, X_1k, y_1k)
