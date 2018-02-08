@@ -15,6 +15,8 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_recall_fscore_support
 
+import sklearn.utils
+
 
 def accuracy(C):
     ''' Compute accuracy given Numpy array confusion matrix C. Returns a floating point value '''
@@ -158,9 +160,57 @@ def class32(X_train, X_test, y_train, y_test, iBest):
        X_1k: numPy array, just 1K rows of X_train
        y_1k: numPy array, just 1K rows of y_train
    '''
-    print('TODO Section 3.2')
 
-    return (X_1k, y_1k)
+    if iBest == 1:
+        classifier = sklearn.svm.LinearSVC(
+            random_state=42,
+            max_iter=1000,
+            dual=False,
+            C=1.2,
+            penalty='l1',
+            tol=1e-4
+
+        )
+    elif iBest == 2:
+        classifier = sklearn.svm.SVC(kernel='rbf', gamma=2, random_state=42)
+    elif iBest == 3:
+        classifier = sklearn.ensemble.RandomForestClassifier(max_depth=5, n_estimators=10, random_state=42)
+    elif iBest == 4:
+        classifier = sklearn.neural_network.MLPClassifier(
+            alpha=0.05,
+            random_state=42,
+            activation='logistic',
+            max_iter=1000,
+            hidden_layer_sizes=(100,),
+            learning_rate='adaptive',
+            momentum=0.9,
+            learning_rate_init=0.001
+        )
+    elif iBest == 5:
+        classifier = sklearn.ensemble.AdaBoostClassifier(random_state=42)
+    else:
+        print("ERROR: Unrecognized best classifier: {}".format(iBest))
+        return
+
+    # Step 3.1 already does shuffling, but just for sanity...
+    X_train, y_train = sklearn.utils.shuffle(X_train, y_train, random_state=42)
+
+    _1k_range = np.arange(0, 1000)
+    X_1k, y_1k = X_train[_1k_range], y_train[_1k_range]
+
+    _5k_range = np.arange(0, 5000)
+    X_5k, y_5k = X_train[_5k_range], y_train[_5k_range]
+
+    _10k_range = np.arange(0, 10000)
+    X_10k, y_10k = X_train[_10k_range], y_train[_10k_range]
+
+    _15k_range = np.arange(0, 15000)
+    X_15k, y_15k = X_train[_15k_range], y_train[_15k_range]
+
+    _20k_range = np.arange(0, 20000)
+    X_20k, y_20k = X_train[_20k_range], y_train[_20k_range]
+
+    return X_1k, y_1k
 
 
 def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
@@ -195,6 +245,8 @@ if __name__ == "__main__":
 
     filename = args.input
 
-    x_train, x_test, y_train, y_test, iBest = class31(filename)
+    X_train, X_test, y_train, y_test, iBest = class31(filename)
 
     print("Best classifier from question 3.1 is {}".format(iBest))
+
+    class32(X_train, X_test, y_train, y_test, iBest)
