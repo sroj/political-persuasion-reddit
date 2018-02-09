@@ -339,10 +339,10 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
     for k in [5, 10, 20, 30, 40, 50]:
         selector = SelectKBest(score_func=f_classif, k=k)
         X_best_features = selector.fit_transform(X_train, y_train)
-        csv_values.append([k, *selector.pvalues_])
+        best_p_values = np.sort(selector.pvalues_[np.argpartition(selector.pvalues_, k)[:k]])
+        csv_values.append([k, *best_p_values])
 
     # Section 3.3.2
-
     selector_1k = SelectKBest(score_func=f_classif, k=5)
     X_train_best_features_1k = selector_1k.fit_transform(X_1k, y_1k)
     X_test_best_features_1k = selector_1k.transform(X_test)
