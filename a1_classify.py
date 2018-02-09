@@ -1,21 +1,15 @@
-import sklearn.svm
-import sklearn.ensemble
-import sklearn.neural_network
-from sklearn.model_selection import train_test_split
-from sklearn.feature_selection import SelectKBest
-from sklearn.feature_selection import f_classif
-import numpy as np
 import argparse
 import csv
-import sys
-import os
 
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import precision_recall_fscore_support
-
+import numpy as np
+import sklearn.ensemble
+import sklearn.neural_network
+import sklearn.svm
 import sklearn.utils
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import f_classif
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
 
 
 def accuracy(C):
@@ -73,8 +67,7 @@ def class31(filename):
 
     print("\nStarting question 3.1")
 
-    file_data = np.load(filename)
-    data = file_data['arr_0']
+    data = load_data(filename)
 
     x = data[:, 0:173]
     y = data[:, 173]
@@ -141,6 +134,12 @@ def class31(filename):
     return x_train, x_test, y_train, y_test, iBest
 
 
+def load_data(filename):
+    file_data = np.load(filename)
+    data = file_data['arr_0']
+    return data
+
+
 def classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
                         recalls):
     classifier.fit(x_train, y_train)
@@ -165,7 +164,7 @@ def class32(X_train, X_test, y_train, y_test, iBest):
        X_test: NumPy array, with the selected testing features
        y_train: NumPy array, with the selected training classes
        y_test: NumPy array, with the selected testing classes
-       i: int, the index of the supposed best classifier (from task 3.1)  
+       iBest: int, the index of the supposed best classifier (from task 3.1)
 
     Returns:
        X_1k: numPy array, just 1K rows of X_train
@@ -393,7 +392,9 @@ def class34(filename, i):
        filename : string, the name of the npz file from Task 2
        i: int, the index of the supposed best classifier (from task 3.1)  
         '''
-    print('TODO Section 3.4')
+
+    print("\nStarting question 3.3")
+    data = load_data(filename)
 
 
 if __name__ == "__main__":
@@ -404,9 +405,7 @@ if __name__ == "__main__":
     filename = args.input
 
     X_train, X_test, y_train, y_test, iBest = class31(filename)
-
     print("Best classifier from question 3.1 is {}".format(iBest))
-
     X_1k, y_1k = class32(X_train, X_test, y_train, y_test, iBest)
-
     class33(X_train, X_test, y_train, y_test, iBest, X_1k, y_1k)
+    class34(filename, iBest)
