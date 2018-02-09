@@ -3,7 +3,7 @@ import sklearn.ensemble
 import sklearn.neural_network
 from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import SelectKBest
-from sklearn.feature_selection import chi2
+from sklearn.feature_selection import f_classif
 import numpy as np
 import argparse
 import csv
@@ -326,6 +326,64 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
        y_1k: numPy array, just 1K rows of y_train (from task 3.2)
     '''
     print("\nStarting question 3.3")
+
+    # Section 3.3.1
+    # 1k best features
+    for k in [5, 10, 20, 30, 40, 50]:
+        selector = SelectKBest(score_func=f_classif, k=k)
+        X_best_features = selector.fit_transform(X_1k, y_1k)
+        pp = selector.pvalues_
+
+    csv_values = []
+    # Original train set best features
+    for k in [5, 10, 20, 30, 40, 50]:
+        selector = SelectKBest(score_func=f_classif, k=k)
+        X_best_features = selector.fit_transform(X_train, y_train)
+        csv_values.append([k, *selector.pvalues_])
+
+    # Section 3.3.2
+
+    selector_1k = SelectKBest(score_func=f_classif, k=5)
+    X_train_best_features_1k = selector_1k.fit_transform(X_1k, y_1k)
+    X_test_best_features_1k = selector_1k.transform(X_test)
+
+    selector_32k = SelectKBest(score_func=f_classif, k=5)
+    X_train_best_features_32k = selector_32k.fit_transform(X_train, y_train)
+    X_test_best_features_32k = selector_32k.transform(X_test)
+
+    if i == 1:
+        print("Question 3.2: running with linear SVC classifier")
+        classifier_1k = build_linear_svc_classifier()
+        classifier_32k = build_linear_svc_classifier()
+    elif i == 2:
+        print("Question 3.2: running with rbf SVC classifier")
+        classifier_1k = build_svc_rbf_classifier()
+        classifier_32k = build_svc_rbf_classifier()
+    elif i == 3:
+        print("Question 3.2: running with random forest classifier")
+        classifier_1k = build_random_forest_classifier()
+        classifier_32k = build_random_forest_classifier()
+    elif i == 4:
+        print("Question 3.2: running with mlp classifier")
+        classifier_1k = build_mlp_classifier()
+        classifier_32k = build_mlp_classifier()
+    elif i == 5:
+        print("Question 3.2: running with ada boost classifier")
+        classifier_1k = build_ada_boost_classifier()
+        classifier_32k = build_ada_boost_classifier()
+    else:
+        print("Error: unrecognized classifier")
+        return
+
+    classifier_1k.fit(X_train_best_features_1k, y_1k)
+    classifier_32k.fit(X_train_best_features_32k, y_train)
+
+    accuracy_1k = accuracy(confusion_matrix(y_test, classifier_1k.predict(X_test_best_features_1k)))
+    accuracy_32k = accuracy(confusion_matrix(y_test, classifier_32k.predict(X_test_best_features_32k)))
+
+    csv_values.append([accuracy_1k, accuracy_32k])
+
+    save_csv_file('a1_3.3.csv', csv_values)
 
 
 def class34(filename, i):
