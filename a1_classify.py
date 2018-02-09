@@ -427,7 +427,7 @@ def class34(filename, i):
        i: int, the index of the supposed best classifier (from task 3.1)  
         '''
 
-    print("\nStarting question 3.3")
+    print("\nStarting question 3.4")
     data = load_data(filename)
 
     X = data[:, 0:173]
