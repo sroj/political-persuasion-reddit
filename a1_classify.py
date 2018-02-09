@@ -6,10 +6,12 @@ import sklearn.ensemble
 import sklearn.neural_network
 import sklearn.svm
 import sklearn.utils
+from scipy import stats
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_classif
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split, KFold
 
 
 def accuracy(C):
@@ -385,6 +387,38 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
     save_csv_file('a1_3.3.csv', csv_values)
 
 
+def run_k_fold(classifier, X, y):
+    print("Running k-fold cross-validation for {}".format(classifier))
+    kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+    return cross_val_score(classifier, X, y, scoring='accuracy', cv=kfold, verbose=True, n_jobs=-1)
+
+
+def run_all_kfolds(X, y):
+    all_scores = []
+
+    linear_svc_classifier = build_linear_svc_classifier()
+    scores = run_k_fold(linear_svc_classifier, X, y)
+    all_scores.append(scores)
+
+    rbf_svc_classifier = build_svc_rbf_classifier()
+    scores = run_k_fold(rbf_svc_classifier, X, y)
+    all_scores.append(scores)
+
+    random_forest_classifier = build_random_forest_classifier()
+    scores = run_k_fold(random_forest_classifier, X, y)
+    all_scores.append(scores)
+
+    mlp_classifier = build_mlp_classifier()
+    scores = run_k_fold(mlp_classifier, X, y)
+    all_scores.append(scores)
+
+    ada_boost_classifier = build_ada_boost_classifier()
+    scores = run_k_fold(ada_boost_classifier, X, y)
+    all_scores.append(scores)
+
+    return all_scores
+
+
 def class34(filename, i):
     ''' This function performs experiment 3.4
     
@@ -395,6 +429,34 @@ def class34(filename, i):
 
     print("\nStarting question 3.3")
     data = load_data(filename)
+
+    X = data[:, 0:173]
+    y = data[:, 173]
+
+    print("Training set size is {}".format(X.shape[0]))
+
+    rows = run_all_kfolds(X, y)
+    # mean_accuracies = list(map(lambda x: x.mean(), rows))
+    # print("Mean accuracies: {}".format(mean_accuracies))
+    # best_classifier = np.argmax(mean_accuracies) + 1
+    best_classifier = i
+
+    print("Best classifier is {}".format(best_classifier))
+
+    rest_of_classifiers = {1, 2, 3, 4, 5} - {best_classifier}
+
+    best_classifier_accuracies = rows[best_classifier - 1]
+
+    p_values = []
+    for i in rest_of_classifiers:
+        print("Comparing classifier {} against {}".format(best_classifier, i))
+        accuracies = rows[i - 1]
+        s = stats.ttest_rel(best_classifier_accuracies, accuracies, nan_policy='raise')
+        p_values.append(s.pvalue)
+
+    rows.append(p_values)
+
+    save_csv_file('a1_3.4.csv', rows)
 
 
 if __name__ == "__main__":
