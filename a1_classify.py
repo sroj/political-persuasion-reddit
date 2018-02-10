@@ -21,7 +21,9 @@ a1_3_2_comment = "As the training set size increases, the accuracy of the classi
                  "to generalize better to unseen examples. This trend is indeed observed in this experiment, " \
                  "as we can see how the accuracies monotonically increase with the training set size."
 
-a1_3_3_comment = "This is the comment for part 3.3"
+a1_3_3_comment_1 = "This is the comment 1 for part 3.3"
+a1_3_3_comment_2 = "This is the comment 2 for part 3.3"
+a1_3_3_comment_3 = "This is the comment 3 for part 3.3"
 
 a1_3_4_comment = "All of the observed p-values are less than 0.05 (the highest is 0.0282). So, if we were to choose a " \
                  "significance level (alpha) of 0.05 (a reasonable and extensively used choice), then we can say that " \
