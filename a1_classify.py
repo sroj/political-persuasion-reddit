@@ -13,6 +13,11 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import train_test_split, KFold
 
+a1_3_1_comment = ""
+a1_3_2_comment = ""
+a1_3_3_comment = ""
+a1_3_4_comment = ""
+
 
 def accuracy(C):
     ''' Compute accuracy given Numpy array confusion matrix C. Returns a floating point value '''
