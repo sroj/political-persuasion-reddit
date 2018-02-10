@@ -23,7 +23,11 @@ a1_3_2_comment = "As the training set size increases, the accuracy of the classi
 
 a1_3_3_comment = "This is the comment for part 3.3"
 
-a1_3_4_comment = "This is the comment for part 3.4"
+a1_3_4_comment = "All of the observed p-values are less than 0.05 (the highest is 0.0282). So, if we were to choose a " \
+                 "significance level (alpha) of 0.05 (a reasonable and extensively used choice), then we can say that " \
+                 "Linear SVC is indeed statistically significantly better than the other four compared classifiers " \
+                 "for this particular experiment. SVMs have historically performed reasonably well in text " \
+                 "classification tasks, so this result should not come as a surprise. "
 
 
 def accuracy(C):
