@@ -13,10 +13,17 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import train_test_split, KFold
 
-a1_3_1_comment = ""
-a1_3_2_comment = ""
-a1_3_3_comment = ""
-a1_3_4_comment = ""
+a1_3_1_comment = "Linear SVC performed the best. This is not a surprise as linear kernel SVMs have proved to be one " \
+                 "of the most effective machine learning models for text classification in the literature."
+
+a1_3_2_comment = "As the training set size increases, the accuracy of the classifier should, in general, improve. " \
+                 "This is because the model has more examples to learn from, and so it's predictions are more likely " \
+                 "to generalize better to unseen examples. This trend is indeed observed in this experiment, " \
+                 "as we can see how the accuracies monotonically increase with the training set size."
+
+a1_3_3_comment = "This is the comment for part 3.3"
+
+a1_3_4_comment = "This is the comment for part 3.4"
 
 
 def accuracy(C):
@@ -36,7 +43,7 @@ def precision(C):
     return [C[i, i] / np.sum(C[:, i]) for i in range(C.shape[0])]
 
 
-def save_csv_file_3_1(accuracies, confusion_matrices, precisions, recalls):
+def save_csv_file_3_1(accuracies, confusion_matrices, precisions, recalls, comment):
     if not (len(accuracies) == len(confusion_matrices) == len(precisions) == len(recalls)):
         print("Error: data dimensions don't match")
         return
@@ -47,6 +54,8 @@ def save_csv_file_3_1(accuracies, confusion_matrices, precisions, recalls):
         cm = confusion_matrices[i]
         row = [i + 1, accuracies[i], *recalls[i], *precisions[i], *(cm.flatten().tolist())]
         rows.append(row)
+
+    rows.append([comment])
 
     save_csv_file('a1_3.1.csv', rows)
 
@@ -134,7 +143,7 @@ def class31(filename):
     classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
                         recalls)
 
-    save_csv_file_3_1(accuracies, confusion_matrices, precisions, recalls)
+    save_csv_file_3_1(accuracies, confusion_matrices, precisions, recalls, a1_3_1_comment)
 
     iBest = np.argmax(accuracies) + 1
 
@@ -388,6 +397,7 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
     accuracy_32k = accuracy(confusion_matrix(y_test, classifier_32k.predict(X_test_best_features_32k)))
 
     csv_values.append([accuracy_1k, accuracy_32k])
+    csv_values.append([a1_3_3_comment])
 
     save_csv_file('a1_3.3.csv', csv_values)
 
@@ -460,6 +470,7 @@ def class34(filename, i):
         p_values.append(s.pvalue)
 
     rows.append(p_values)
+    rows.append([a1_3_4_comment])
 
     save_csv_file('a1_3.4.csv', rows)
 
