@@ -219,7 +219,7 @@ def class32(X_train, X_test, y_train, y_test, iBest):
     ]
 
     file = 'a1_3.2.csv'
-    save_csv_file(file, [accuracies])
+    save_csv_file(file, [accuracies, [a1_3_2_comment]])
     print("Accuracies for question 3.2 saved to {}".format(file))
 
     return X_1k, y_1k
