@@ -43,7 +43,17 @@ a1_3_2_comment = "As the training set size increases, the accuracy of the classi
                  "size."
 
 a1_3_3_comment_a = "This is the comment 1 for part 3.3"
-a1_3_3_comment_b = "This is the comment 2 for part 3.3"
+
+a1_3_3_comment_b = "The observed p-values are markedly lower as the amount of data increases. For a 1k training set, " \
+                   "they range from 3.9802e-14 to 0.0025 (a1_best_p_values_1k.csv), whereas for the 32k training set, " \
+                   "they range from 3.2107e-277 to 5.4757e-49 (a1_3.3.csv). Having larger sample sizes (1k vs 32k) " \
+                   "should provide more robustness to the estimation of the linear relationships that the univariate " \
+                   "f-tests in SelectKBest are estimating. Hence, as the amount of data increases, the p-values " \
+                   "should reflect this by having lower values, as they did in this experiment. At a higher level, " \
+                   "by having more data, there's a higher chance that a larger set of features exhibit some degree of " \
+                   "correlation with the output label, and this gets reflected in the overall tendency of p-values to " \
+                   "decrease. "
+
 a1_3_3_comment_c = "This is the comment 3 for part 3.3"
 
 a1_3_4_comment = "All of the observed p-values are less than 0.05 (the highest is 0.0282). So, if we were to choose a " \
