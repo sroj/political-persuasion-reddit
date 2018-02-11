@@ -16,7 +16,25 @@ from sklearn.model_selection import train_test_split, KFold
 from sklearn.neighbors import KNeighborsClassifier
 
 a1_3_1_comment = "Linear SVC performed the best. This is not a surprise as linear kernel SVMs have proved to be one " \
-                 "of the most effective machine learning models for text classification in the literature."
+                 "of the most effective machine learning models for text classification in the literature. Indeed, " \
+                 "their ability to handle large feature spaces (173 features in this case, which is arguably not " \
+                 "huge, but also not a small number), and sparse feature matrices (where many values are zero), " \
+                 "make them particularly suitable for text categorization. All of these reasons, plus all of the " \
+                 "empirical evidence shown by the machine learning community, make this result come as no surprise. " \
+                 "SMV with an RBF kernel was the worst performing model. The literature has shown how rbf kernels for " \
+                 "text classification tasks, where the number of features is large, have no significant advantage " \
+                 "over linear kernels. This is because mapping to higher dimensional feature spaces is not necessary " \
+                 "for this type of task (as the feature space dimension is already large). Moreover, SVC with rbf on " \
+                 "scikit-learn is quadratic on the number of samples, which makes it perform poorly on large datasets " \
+                 "(confirmed empirically in this project as this model was, by a large margin, the slowest to train). " \
+                 "This makes it an even worse choice as the time available to perform hyperparameter tuning is " \
+                 "severely limited. The other models performed relatively well compared to Linear SMVs however, " \
+                 "in particular AdaBoost. This, again, comes as no surprise as decision trees have performed " \
+                 "relatively well on text classification, and AdaBoost would just take that performance gain further, " \
+                 "being it a boosting algorithm (and ensemble method) that combines many decision trees together (or " \
+                 "any other classifier, for that matter, but in this case, it is using decision trees, which is the " \
+                 "default classifier for this method in scikit-learn) and 'boosts' their performance by progressively " \
+                 "making them focus on the incorrectly classified instances via instance re-weighting. "
 
 a1_3_2_comment = "As the training set size increases, the accuracy of the classifier should, in general, improve (all " \
                  "other things being equal). This is because the model has more examples to learn from, and so its " \
