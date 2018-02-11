@@ -320,6 +320,19 @@ def build_linear_svc_classifier():
     )
 
 
+def save_best_features(best_features_1k, best_features_32k):
+    rows = []
+    for key, value in best_features_1k.items():
+        value = np.sort(value)
+        rows.append(["1k", "k{}".format(key), *value])
+
+    for key, value in best_features_32k.items():
+        value = np.sort(value)
+        rows.append(["32k", "k{}".format(key), *value])
+
+    save_csv_file('a1_best_features.csv', rows)
+
+
 def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
     ''' This function performs experiment 3.3
     
@@ -341,10 +354,6 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
         selector = SelectKBest(score_func=f_classif, k=k)
         selector.fit_transform(X_1k, y_1k)
         best_features_1k[k] = selector.get_support(True)
-        pp = selector.pvalues_
-
-    print("Best features 1k:")
-    print(best_features_1k)
 
     csv_values = []
     # Original train set best features
@@ -356,8 +365,7 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
         best_p_values = np.sort(selector.pvalues_[np.argpartition(selector.pvalues_, k)[:k]])
         csv_values.append([k, *best_p_values])
 
-    print("Best features 32k:")
-    print(best_features_32k)
+    save_best_features(best_features_1k, best_features_32k)
 
     # Section 3.3.2
     selector_1k = SelectKBest(score_func=f_classif, k=5)
@@ -530,4 +538,4 @@ if __name__ == "__main__":
     X_1k, y_1k = class32(X_train, X_test, y_train, y_test, iBest)
     class33(X_train, X_test, y_train, y_test, iBest, X_1k, y_1k)
     class34(filename, iBest)
-    class4_bonus(filename)
+    # class4_bonus(filename)
