@@ -42,9 +42,9 @@ a1_3_2_comment = "As the training set size increases, the accuracy of the classi
                  "in this experiment, as we can see how the accuracies monotonically increase with the training set " \
                  "size."
 
-a1_3_3_comment_1 = "This is the comment 1 for part 3.3"
-a1_3_3_comment_2 = "This is the comment 2 for part 3.3"
-a1_3_3_comment_3 = "This is the comment 3 for part 3.3"
+a1_3_3_comment_a = "This is the comment 1 for part 3.3"
+a1_3_3_comment_b = "This is the comment 2 for part 3.3"
+a1_3_3_comment_c = "This is the comment 3 for part 3.3"
 
 a1_3_4_comment = "All of the observed p-values are less than 0.05 (the highest is 0.0282). So, if we were to choose a " \
                  "significance level (alpha) of 0.05 (a reasonable and extensively used choice), then we can say that " \
@@ -411,9 +411,9 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
     accuracy_32k = accuracy(confusion_matrix(y_test, classifier_32k.predict(X_test_best_features_32k)))
 
     csv_values.append([accuracy_1k, accuracy_32k])
-    csv_values.append([a1_3_3_comment_1])
-    csv_values.append([a1_3_3_comment_2])
-    csv_values.append([a1_3_3_comment_3])
+    csv_values.append([a1_3_3_comment_a])
+    csv_values.append([a1_3_3_comment_b])
+    csv_values.append([a1_3_3_comment_c])
 
     save_csv_file('a1_3.3.csv', csv_values)
 
