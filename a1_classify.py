@@ -107,48 +107,31 @@ def class31(filename):
     # Start running experiments
     # Linear SVC
     print("Running linear SVC")
-    classifier = sklearn.svm.LinearSVC(
-        random_state=42,
-        max_iter=1000,
-        dual=False,
-        C=1.2,
-        penalty='l1',
-        tol=1e-4
-
-    )
+    classifier = build_linear_svc_classifier()
     classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
                         recalls)
 
     # Running rbf SVC
     print("Running rbf SVC")
-    classifier = sklearn.svm.SVC(kernel='rbf', gamma=2, random_state=42)
+    classifier = build_svc_rbf_classifier()
     classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
                         recalls)
 
     # Random Forest Classifier
     print("Running Random Forest classifier")
-    classifier = sklearn.ensemble.RandomForestClassifier(max_depth=5, n_estimators=10, random_state=42)
+    classifier = build_random_forest_classifier()
     classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
                         recalls)
 
     # MLP
     print("Running MLP classifier")
-    classifier = sklearn.neural_network.MLPClassifier(
-        alpha=0.05,
-        random_state=42,
-        activation='logistic',
-        max_iter=1000,
-        hidden_layer_sizes=(100,),
-        learning_rate='adaptive',
-        momentum=0.9,
-        learning_rate_init=0.001
-    )
+    classifier = build_mlp_classifier()
     classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
                         recalls)
 
     # Ada Boost
     print("Running Ada Boost classifier")
-    classifier = sklearn.ensemble.AdaBoostClassifier(random_state=42)
+    classifier = build_ada_boost_classifier()
     classify_and_report(classifier, x_test, x_train, y_test, y_train, accuracies, confusion_matrices, precisions,
                         recalls)
 
@@ -376,23 +359,23 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
     X_test_best_features_32k = selector_32k.transform(X_test)
 
     if i == 1:
-        print("Question 3.2: running with linear SVC classifier")
+        print("Question 3.3: running with linear SVC classifier")
         classifier_1k = build_linear_svc_classifier()
         classifier_32k = build_linear_svc_classifier()
     elif i == 2:
-        print("Question 3.2: running with rbf SVC classifier")
+        print("Question 3.3: running with rbf SVC classifier")
         classifier_1k = build_svc_rbf_classifier()
         classifier_32k = build_svc_rbf_classifier()
     elif i == 3:
-        print("Question 3.2: running with random forest classifier")
+        print("Question 3.3: running with random forest classifier")
         classifier_1k = build_random_forest_classifier()
         classifier_32k = build_random_forest_classifier()
     elif i == 4:
-        print("Question 3.2: running with mlp classifier")
+        print("Question 3.3: running with mlp classifier")
         classifier_1k = build_mlp_classifier()
         classifier_32k = build_mlp_classifier()
     elif i == 5:
-        print("Question 3.2: running with ada boost classifier")
+        print("Question 3.3: running with ada boost classifier")
         classifier_1k = build_ada_boost_classifier()
         classifier_32k = build_ada_boost_classifier()
     else:
@@ -406,7 +389,9 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
     accuracy_32k = accuracy(confusion_matrix(y_test, classifier_32k.predict(X_test_best_features_32k)))
 
     csv_values.append([accuracy_1k, accuracy_32k])
-    csv_values.append([a1_3_3_comment])
+    csv_values.append([a1_3_3_comment_1])
+    csv_values.append([a1_3_3_comment_2])
+    csv_values.append([a1_3_3_comment_3])
 
     save_csv_file('a1_3.3.csv', csv_values)
 
