@@ -358,29 +358,7 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
     X_train_best_features_32k = selector_32k.fit_transform(X_train, y_train)
     X_test_best_features_32k = selector_32k.transform(X_test)
 
-    if i == 1:
-        print("Question 3.3: running with linear SVC classifier")
-        classifier_1k = build_linear_svc_classifier()
-        classifier_32k = build_linear_svc_classifier()
-    elif i == 2:
-        print("Question 3.3: running with rbf SVC classifier")
-        classifier_1k = build_svc_rbf_classifier()
-        classifier_32k = build_svc_rbf_classifier()
-    elif i == 3:
-        print("Question 3.3: running with random forest classifier")
-        classifier_1k = build_random_forest_classifier()
-        classifier_32k = build_random_forest_classifier()
-    elif i == 4:
-        print("Question 3.3: running with mlp classifier")
-        classifier_1k = build_mlp_classifier()
-        classifier_32k = build_mlp_classifier()
-    elif i == 5:
-        print("Question 3.3: running with ada boost classifier")
-        classifier_1k = build_ada_boost_classifier()
-        classifier_32k = build_ada_boost_classifier()
-    else:
-        print("Error: unrecognized classifier")
-        return
+    classifier_1k, classifier_32k = build_classifiers_question_3_3(i)
 
     classifier_1k.fit(X_train_best_features_1k, y_1k)
     classifier_32k.fit(X_train_best_features_32k, y_train)
@@ -394,6 +372,34 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
     csv_values.append([a1_3_3_comment_3])
 
     save_csv_file('a1_3.3.csv', csv_values)
+
+
+def build_classifiers_question_3_3(iBest):
+    if iBest == 1:
+        print("Question 3.3: running with linear SVC classifier")
+        classifier_1k = build_linear_svc_classifier()
+        classifier_32k = build_linear_svc_classifier()
+    elif iBest == 2:
+        print("Question 3.3: running with rbf SVC classifier")
+        classifier_1k = build_svc_rbf_classifier()
+        classifier_32k = build_svc_rbf_classifier()
+    elif iBest == 3:
+        print("Question 3.3: running with random forest classifier")
+        classifier_1k = build_random_forest_classifier()
+        classifier_32k = build_random_forest_classifier()
+    elif iBest == 4:
+        print("Question 3.3: running with mlp classifier")
+        classifier_1k = build_mlp_classifier()
+        classifier_32k = build_mlp_classifier()
+    elif iBest == 5:
+        print("Question 3.3: running with ada boost classifier")
+        classifier_1k = build_ada_boost_classifier()
+        classifier_32k = build_ada_boost_classifier()
+    else:
+        print("Error: unrecognized classifier")
+        raise RuntimeError("Unrecognized classifier")
+
+    return classifier_1k, classifier_32k
 
 
 def run_k_fold(classifier, X, y):
