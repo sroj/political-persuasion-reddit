@@ -40,7 +40,7 @@ a1_3_2_comment = "As the training set size increases, the accuracy of the classi
                  "other things being equal). This is because the model has more examples to learn from, and so its " \
                  "predictions are more likely to generalize better to unseen examples. This trend is indeed observed " \
                  "in this experiment, as we can see how the accuracies monotonically increase with the training set " \
-                 "size. "
+                 "size."
 
 a1_3_3_comment_1 = "This is the comment 1 for part 3.3"
 a1_3_3_comment_2 = "This is the comment 2 for part 3.3"
