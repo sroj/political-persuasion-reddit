@@ -336,18 +336,28 @@ def class33(X_train, X_test, y_train, y_test, i, X_1k, y_1k):
 
     # Section 3.3.1
     # 1k best features
+    best_features_1k = {}
     for k in [5, 10, 20, 30, 40, 50]:
         selector = SelectKBest(score_func=f_classif, k=k)
-        X_best_features = selector.fit_transform(X_1k, y_1k)
+        selector.fit_transform(X_1k, y_1k)
+        best_features_1k[k] = selector.get_support(True)
         pp = selector.pvalues_
+
+    print("Best features 1k:")
+    print(best_features_1k)
 
     csv_values = []
     # Original train set best features
+    best_features_32k = {}
     for k in [5, 10, 20, 30, 40, 50]:
         selector = SelectKBest(score_func=f_classif, k=k)
-        X_best_features = selector.fit_transform(X_train, y_train)
+        selector.fit_transform(X_train, y_train)
+        best_features_32k[k] = selector.get_support(True)
         best_p_values = np.sort(selector.pvalues_[np.argpartition(selector.pvalues_, k)[:k]])
         csv_values.append([k, *best_p_values])
+
+    print("Best features 32k:")
+    print(best_features_32k)
 
     # Section 3.3.2
     selector_1k = SelectKBest(score_func=f_classif, k=5)
