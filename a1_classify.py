@@ -10,8 +10,8 @@ from scipy import stats
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_classif
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import cross_val_score
+from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -361,7 +361,7 @@ def build_linear_svc_classifier():
         random_state=42,
         max_iter=1000,
         dual=False,
-        C=1.2,
+        C=2.2,
         penalty='l1',
         tol=1e-4
 
@@ -505,6 +505,9 @@ def run_all_kfolds(X, y):
     scores = run_k_fold(ada_boost_classifier, X, y)
     all_scores.append(scores)
 
+    # This is just to comply with the csv format spec, as per handout and Piazza
+    all_scores = np.array(all_scores).transpose().tolist()
+
     return all_scores
 
 
@@ -549,17 +552,43 @@ def class34(filename, i):
     save_csv_file('a1_3.4.csv', rows)
 
 
-def class4_bonus(filename):
-    """
+def do_svm_grid_search(x_train, x_test, y_train, y_test):
+    """For bonus question."""
+    model = build_linear_svc_classifier()
+
+    param_grid = [
+        {'C': np.arange(0.5, 3.0, 0.1)}
+    ]
+
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, n_jobs=-1, refit=True)
+
+    grid_search.fit(x_train, y_train)
+
+    print("Best score: %0.3f" % grid_search.best_score_)
+    print("Best parameters set:")
+    best_parameters = grid_search.best_estimator_.get_params()
+    for param_name in param_grid[0]:
+        print("\t%s: %r" % (param_name, best_parameters[param_name]))
+
+    model = grid_search.best_estimator_
+
+    y_pred = model.predict(x_test)
+    print("SVM with GS test accuracy: {}".format(accuracy_score(y_test, y_pred)))
 
 
+def class4_bonus(x_train, x_test, y_train, y_test):
+    """Runs the bonus sections of the assignment handout.
+
+    Several other models are explored to understand how they perform.
+    Also, hyperparameter tuning is done via grid search to obtain optimum values.
+
+    :param x_train: train data
+    :param x_test: test data
+    :param y_train: train labels
+    :param y_test: test labels
+    :return:
     """
     print("\nStarting question 4 (bonus question)")
-    data = load_data(filename)
-    x = data[:, 0:173]
-    y = data[:, 173]
-
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=42, shuffle=True)
 
     classifier = LogisticRegression()
     classifier.fit(x_train, y_train)
@@ -581,6 +610,9 @@ def class4_bonus(filename):
 
     print("Nearest Neighbors accuracy: {}".format(accuracy_log_reg))
 
+    # Through this method, a C value of 2.2 was chosen as optimal for this dataset
+    do_svm_grid_search(x_train, x_test, y_train, y_test)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -594,4 +626,4 @@ if __name__ == "__main__":
     X_1k, y_1k = class32(X_train, X_test, y_train, y_test, iBest)
     class33(X_train, X_test, y_train, y_test, iBest, X_1k, y_1k)
     class34(filename, iBest)
-    # class4_bonus(filename)
+    class4_bonus(X_train, X_test, y_train, y_test)
