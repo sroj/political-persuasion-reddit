@@ -474,7 +474,6 @@ def main(args):
 
             print("File {} has {} comments".format(fullFile, num_comments))
 
-            # TODO: select appropriate args.max lines
             max_lines = int(args.max)
 
             start_index = student_id % num_comments
@@ -484,10 +483,8 @@ def main(args):
             sampled_data = sample_data(data, start_index, end_index)
             print("The sampled dataset contains {} comments".format(len(sampled_data)))
 
-            # TODO: read those lines with something like `j = json.loads(line)`
             sampled_data = [json.loads(line) for line in sampled_data]
 
-            # TODO: choose to retain fields from those lines that are relevant to you
             keys_to_keep = [
                 "id",
                 "score",
@@ -500,14 +497,10 @@ def main(args):
             ]
             sampled_data = remove_unused_fields(sampled_data, keys_to_keep)
 
-            # TODO: add a field to each selected line called 'cat' with the value of 'file' (e.g., 'Alt', 'Right', ...)
             label_data(sampled_data, file)
 
-            # TODO: process the body field (j['body']) with preproc1(...) using default for `steps` argument
-            # TODO: replace the 'body' field with the processed text
             preprocess_bodies(sampled_data)
 
-            # TODO: append the result to 'allOutput'
             for datum in sampled_data:
                 allOutput.append(datum)
 
