@@ -7,11 +7,11 @@ import re
 
 import numpy as np
 
-prefix_wordlist = ''
+prefix_wordlist = '/u/cs401/'
 wordlists_dir = prefix_wordlist + 'Wordlists/'
 
-prefix_feats = ''
-feats_dir = 'feats/'
+prefix_feats = '/u/cs401/A1/'
+feats_dir = prefix_feats + 'feats/'
 
 filename_norm_bristol_gilhooly_logie = wordlists_dir + "BristolNorms+GilhoolyLogie.csv"
 filename_norm_warringer = wordlists_dir + "Ratings_Warriner_et_al.csv"
