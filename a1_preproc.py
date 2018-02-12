@@ -524,3 +524,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     main(args)
+    print("Preprocessing finished. Exiting...")

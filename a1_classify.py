@@ -627,3 +627,4 @@ if __name__ == "__main__":
     class33(X_train, X_test, y_train, y_test, iBest, X_1k, y_1k)
     class34(filename, iBest)
     class4_bonus(X_train, X_test, y_train, y_test)
+    print("Classification finished. Exiting...")
