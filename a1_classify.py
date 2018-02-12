@@ -54,7 +54,21 @@ a1_3_3_comment_b = "The observed p-values are markedly lower as the amount of da
                    "correlation with the output label, and this gets reflected in the overall tendency of p-values to " \
                    "decrease. "
 
-a1_3_3_comment_c = "This is the comment 3 for part 3.3"
+a1_3_3_comment_c = "The top 5 features for the 32k training set are (from more significant to less significant: " \
+                   "receptiviti_intellectual, receptiviti_health_oriented, liwc_verb, Number of adverbs, and Standard " \
+                   "deviation of IMG from Bristol, Gilhooly, and Logie norms. It's interesting (and granted, " \
+                   "amusing), that the receptiviti_intellectual feature was chosen among the top. It might indicate " \
+                   "that certain classes appeal to more intellectual language than others. Likewise, " \
+                   "receptiviti_health_oriented, was also an interesting result. It might reflect the long-standing " \
+                   "and highly controversial debate in the US about the health care system, which always polarizes " \
+                   "the political spectrum (and hence, our labels). Liwc_verb also ranked among the top. There might " \
+                   "be a correlation between the verbs used among different political sectors. It would be " \
+                   "interesting to do follow up research on this particular feature to understand which verbs " \
+                   "differentiate them the most. A similar hypothesis can be drawn for the number_of_adverbs feature. " \
+                   "Finally, the standard deviation of IMG (Imagery/Image-ability) of the Bristol, Gilhooly, " \
+                   "and Logie norms ranked among the top 5. It's harder to say why this particular feature ranked so " \
+                   "high. It nonetheless suggests that some classes might tend to have tigher clusters (lower " \
+                   "standard deviation) of words arousing images, relative to other classes. "
 
 a1_3_4_comment = "All of the observed p-values are less than 0.05 (the highest is 0.0282). So, if we were to choose a " \
                  "significance level (alpha) of 0.05 (a reasonable and extensively used choice), then we can say that " \
