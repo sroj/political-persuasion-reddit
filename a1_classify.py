@@ -42,7 +42,13 @@ a1_3_2_comment = "As the training set size increases, the accuracy of the classi
                  "in this experiment, as we can see how the accuracies monotonically increase with the training set " \
                  "size."
 
-a1_3_3_comment_a = "This is the comment 1 for part 3.3"
+a1_3_3_comment_a = "Four out of the five top features were selected in common in both the lower (1k) and higher (32k) " \
+                   "sizes of training datasets. These four features are number_of_adverbs, Standard deviation of IMG " \
+                   "from Bristol, Gilhooly, and Logie norms, liwc_verb, and receptiviti_intellectual. This might " \
+                   "indicate that these features are indeed among the best descriptors of the classified labels, " \
+                   "as they are present in both dataset sizes. Also, it helps that the dataset is well balanced (by " \
+                   "design, as 10k examples were chosen for each class), so the underlaying correlations are well " \
+                   "represented in both dataset sizes."
 
 a1_3_3_comment_b = "The observed p-values are markedly lower as the amount of data increases. For a 1k training set, " \
                    "they range from 3.9802e-14 to 0.0025 (a1_best_p_values_1k.csv), whereas for the 32k training set, " \
