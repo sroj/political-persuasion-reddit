@@ -20,12 +20,12 @@ nlp = spacy.load('en', disable=['parser', 'ner'])
 
 def read_all_abbreviations():
     files = ["abbrev.english", "pn_abbrev.english"]
-    return set(read_files_by_line(wordlists_dir, files))
+    return set(read_files_by_line('', files))
 
 
 def read_proper_name_abbreviations():
     files = ["pn_abbrev.english"]
-    return set(read_files_by_line(wordlists_dir, files))
+    return set(read_files_by_line('', files))
 
 
 def read_files_by_line(directory, files):
