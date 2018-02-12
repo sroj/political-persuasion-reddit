@@ -11,8 +11,7 @@ import spacy.tokens
 prefix_a1 = '/u/cs401/A1/'
 indir = prefix_a1 + 'data/';
 
-# prefix_wordlist = '/u/cs401/'
-prefix_wordlist = ''
+prefix_wordlist = '/u/cs401/'
 wordlists_dir = prefix_wordlist + 'Wordlists/'
 
 nlp = spacy.load('en', disable=['parser', 'ner'])
