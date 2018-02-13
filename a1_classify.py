@@ -505,9 +505,6 @@ def run_all_kfolds(X, y):
     scores = run_k_fold(ada_boost_classifier, X, y)
     all_scores.append(scores)
 
-    # This is just to comply with the csv format spec, as per handout and Piazza
-    all_scores = np.array(all_scores).transpose().tolist()
-
     return all_scores
 
 
@@ -545,6 +542,9 @@ def class34(filename, i):
         accuracies = rows[i - 1]
         s = stats.ttest_rel(best_classifier_accuracies, accuracies, nan_policy='raise')
         p_values.append(s.pvalue)
+
+    # This is just to comply with the csv format spec, as per handout and Piazza
+    rows = np.array(rows).transpose().tolist()
 
     rows.append(p_values)
     rows.append([a1_3_4_comment])
